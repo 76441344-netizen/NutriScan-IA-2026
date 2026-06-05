@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "NutriScan IA"
+version = "1.0.0"
+id = "artifacts/nutriscan"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25715
+
+[services.development]
+run = "pnpm --filter @workspace/nutriscan run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/nutriscan", "run", "build" ]
+publicDir = "artifacts/nutriscan/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25715"
+BASE_PATH = "/"

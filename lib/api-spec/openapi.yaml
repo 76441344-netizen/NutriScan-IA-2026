@@ -1,22 +1,25 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: NutriScan IA API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: users
+    description: User profile operations
+  - name: recipes
+    description: Recipe generation and history operations
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +27,169 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /users:
+    post:
+      operationId: createUser
+      tags: [users]
+      summary: Register a new user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Validation error
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get user profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update user profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /recipes/generate:
+    post:
+      operationId: generateRecipe
+      tags: [recipes]
+      summary: Generate an AI recipe from available ingredients
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipeGenerateInput"
+      responses:
+        "200":
+          description: Generated recipe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+        "400":
+          description: Validation error
+        "500":
+          description: AI generation error
+
+  /recipes:
+    get:
+      operationId: listRecipes
+      tags: [recipes]
+      summary: List saved recipes for a user
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Recipe"
+
+  /recipes/{id}:
+    get:
+      operationId: getRecipe
+      tags: [recipes]
+      summary: Get a single recipe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Recipe found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteRecipe
+      tags: [recipes]
+      summary: Delete a recipe from history
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /recipes/stats/{userId}:
+    get:
+      operationId: getRecipeStats
+      tags: [recipes]
+      summary: Get recipe generation stats for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +200,106 @@ components:
       required:
         - status
 
+    User:
+      type: object
+      required: [id, nombre, integrantes, ninos, presupuesto, tiempo_cocina, createdAt]
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        integrantes:
+          type: integer
+        ninos:
+          type: integer
+        edades:
+          type: ["string", "null"]
+        presupuesto:
+          type: string
+        tiempo_cocina:
+          type: integer
+        createdAt:
+          type: string
+
+    UserInput:
+      type: object
+      required: [nombre, integrantes, ninos, presupuesto, tiempo_cocina]
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+        integrantes:
+          type: integer
+          minimum: 1
+        ninos:
+          type: integer
+          minimum: 1
+        edades:
+          type: string
+        presupuesto:
+          type: string
+        tiempo_cocina:
+          type: integer
+          minimum: 5
+
+    UserUpdate:
+      type: object
+      properties:
+        nombre:
+          type: string
+        integrantes:
+          type: integer
+        ninos:
+          type: integer
+        edades:
+          type: string
+        presupuesto:
+          type: string
+        tiempo_cocina:
+          type: integer
+
+    Recipe:
+      type: object
+      required: [id, userId, nombre, ingredientes, pasos, tiempo_preparacion, beneficios, prevencion_anemia, ingredientesUsados, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        nombre:
+          type: string
+        ingredientes:
+          type: string
+        pasos:
+          type: string
+        tiempo_preparacion:
+          type: string
+        beneficios:
+          type: string
+        prevencion_anemia:
+          type: string
+        ingredientesUsados:
+          type: string
+        createdAt:
+          type: string
+
+    RecipeGenerateInput:
+      type: object
+      required: [userId, ingredientes]
+      properties:
+        userId:
+          type: integer
+        ingredientes:
+          type: string
+          minLength: 3
+
+    RecipeStats:
+      type: object
+      required: [totalRecipes, thisMonth, topIngredient]
+      properties:
+        totalRecipes:
+          type: integer
+        thisMonth:
+          type: integer
+        topIngredient:
+          type: ["string", "null"]
