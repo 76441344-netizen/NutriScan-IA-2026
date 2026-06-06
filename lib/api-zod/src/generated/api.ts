@@ -174,3 +174,88 @@ export const GetRecipeStatsResponse = zod.object({
 })
 
 
+/**
+ * @summary Analyze an image to detect food ingredients using AI vision
+ */
+export const AnalyzeScanBody = zod.object({
+  "userId": zod.number(),
+  "imageBase64": zod.string().describe('Base64 encoded image data'),
+  "mimeType": zod.string().describe('MIME type of the image (e.g. image\/jpeg)')
+})
+
+export const AnalyzeScanResponse = zod.object({
+  "ingredients": zod.array(zod.string()).describe('List of detected food ingredients')
+})
+
+
+/**
+ * @summary Generate an enhanced recipe from scanned ingredients and save the scan
+ */
+export const GenerateScanRecipeBody = zod.object({
+  "userId": zod.number(),
+  "ingredients": zod.array(zod.string()),
+  "imageBase64": zod.string(),
+  "mimeType": zod.string()
+})
+
+export const GenerateScanRecipeResponse = zod.object({
+  "id": zod.number(),
+  "userId": zod.number(),
+  "nombre": zod.string(),
+  "ingredientesDetectados": zod.array(zod.string()),
+  "ingredientes": zod.string(),
+  "pasos": zod.string(),
+  "tiempo_preparacion": zod.string(),
+  "beneficios": zod.string(),
+  "nivelHierro": zod.string().describe('Bajo, Medio, or Alto'),
+  "prevencion_anemia": zod.string(),
+  "consejos_absorcion": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary List ingredient scans for a user
+ */
+export const ListScansQueryParams = zod.object({
+  "userId": zod.coerce.number()
+})
+
+export const ListScansResponseItem = zod.object({
+  "id": zod.number(),
+  "userId": zod.number(),
+  "ingredientesDetectados": zod.string(),
+  "nombre": zod.string().nullish(),
+  "nivelHierro": zod.string().nullish(),
+  "recipeData": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const ListScansResponse = zod.array(ListScansResponseItem)
+
+
+/**
+ * @summary Get a single scan with its recipe
+ */
+export const GetScanParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetScanResponse = zod.object({
+  "id": zod.number(),
+  "userId": zod.number(),
+  "ingredientesDetectados": zod.string(),
+  "nombre": zod.string().nullish(),
+  "nivelHierro": zod.string().nullish(),
+  "recipeData": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a scan
+ */
+export const DeleteScanParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+

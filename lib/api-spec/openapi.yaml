@@ -13,6 +13,8 @@ tags:
     description: User profile operations
   - name: recipes
     description: Recipe generation and history operations
+  - name: scans
+    description: Ingredient scanning with AI vision
 
 paths:
   /healthz:
@@ -190,6 +192,107 @@ paths:
               schema:
                 $ref: "#/components/schemas/RecipeStats"
 
+  /scans/analyze:
+    post:
+      operationId: analyzeScan
+      tags: [scans]
+      summary: Analyze an image to detect food ingredients using AI vision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScanAnalyzeInput"
+      responses:
+        "200":
+          description: Detected ingredients
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanAnalyzeResult"
+        "400":
+          description: Validation error
+        "500":
+          description: AI vision error
+
+  /scans/generate:
+    post:
+      operationId: generateScanRecipe
+      tags: [scans]
+      summary: Generate an enhanced recipe from scanned ingredients and save the scan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScanGenerateInput"
+      responses:
+        "200":
+          description: Enhanced recipe with iron level and absorption tips
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanRecipe"
+        "400":
+          description: Validation error
+        "500":
+          description: AI generation error
+
+  /scans:
+    get:
+      operationId: listScans
+      tags: [scans]
+      summary: List ingredient scans for a user
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of scans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Scan"
+
+  /scans/{id}:
+    get:
+      operationId: getScan
+      tags: [scans]
+      summary: Get a single scan with its recipe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Scan found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Scan"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteScan
+      tags: [scans]
+      summary: Delete a scan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
 components:
   schemas:
     HealthStatus:
@@ -303,3 +406,92 @@ components:
           type: integer
         topIngredient:
           type: ["string", "null"]
+
+    ScanAnalyzeInput:
+      type: object
+      required: [userId, imageBase64, mimeType]
+      properties:
+        userId:
+          type: integer
+        imageBase64:
+          type: string
+          description: Base64 encoded image data
+        mimeType:
+          type: string
+          description: "MIME type of the image (e.g. image/jpeg)"
+
+    ScanAnalyzeResult:
+      type: object
+      required: [ingredients]
+      properties:
+        ingredients:
+          type: array
+          items:
+            type: string
+          description: List of detected food ingredients
+
+    ScanGenerateInput:
+      type: object
+      required: [userId, ingredients, imageBase64, mimeType]
+      properties:
+        userId:
+          type: integer
+        ingredients:
+          type: array
+          items:
+            type: string
+        imageBase64:
+          type: string
+        mimeType:
+          type: string
+
+    ScanRecipe:
+      type: object
+      required: [id, userId, nombre, ingredientesDetectados, ingredientes, pasos, tiempo_preparacion, beneficios, nivelHierro, prevencion_anemia, consejos_absorcion, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        nombre:
+          type: string
+        ingredientesDetectados:
+          type: array
+          items:
+            type: string
+        ingredientes:
+          type: string
+        pasos:
+          type: string
+        tiempo_preparacion:
+          type: string
+        beneficios:
+          type: string
+        nivelHierro:
+          type: string
+          description: "Bajo, Medio, or Alto"
+        prevencion_anemia:
+          type: string
+        consejos_absorcion:
+          type: string
+        createdAt:
+          type: string
+
+    Scan:
+      type: object
+      required: [id, userId, ingredientesDetectados, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        ingredientesDetectados:
+          type: string
+        nombre:
+          type: ["string", "null"]
+        nivelHierro:
+          type: ["string", "null"]
+        recipeData:
+          type: ["string", "null"]
+        createdAt:
+          type: string

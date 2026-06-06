@@ -22,9 +22,15 @@ import type {
 import type {
   HealthStatus,
   ListRecipesParams,
+  ListScansParams,
   Recipe,
   RecipeGenerateInput,
   RecipeStats,
+  Scan,
+  ScanAnalyzeInput,
+  ScanAnalyzeResult,
+  ScanGenerateInput,
+  ScanRecipe,
   User,
   UserInput,
   UserUpdate
@@ -717,4 +723,377 @@ export function useGetRecipeStats<TData = Awaited<ReturnType<typeof getRecipeSta
 
 
 
+
+export const getAnalyzeScanUrl = () => {
+
+
+
+
+  return `/api/scans/analyze`
+}
+
+/**
+ * @summary Analyze an image to detect food ingredients using AI vision
+ */
+export const analyzeScan = async (scanAnalyzeInput: ScanAnalyzeInput, options?: RequestInit): Promise<ScanAnalyzeResult> => {
+
+  return customFetch<ScanAnalyzeResult>(getAnalyzeScanUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      scanAnalyzeInput,)
+  }
+);}
+
+
+
+
+export const getAnalyzeScanMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof analyzeScan>>, TError,{data: BodyType<ScanAnalyzeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof analyzeScan>>, TError,{data: BodyType<ScanAnalyzeInput>}, TContext> => {
+
+const mutationKey = ['analyzeScan'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof analyzeScan>>, {data: BodyType<ScanAnalyzeInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  analyzeScan(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AnalyzeScanMutationResult = NonNullable<Awaited<ReturnType<typeof analyzeScan>>>
+    export type AnalyzeScanMutationBody = BodyType<ScanAnalyzeInput>
+    export type AnalyzeScanMutationError = ErrorType<void>
+
+    /**
+ * @summary Analyze an image to detect food ingredients using AI vision
+ */
+export const useAnalyzeScan = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof analyzeScan>>, TError,{data: BodyType<ScanAnalyzeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof analyzeScan>>,
+        TError,
+        {data: BodyType<ScanAnalyzeInput>},
+        TContext
+      > => {
+      return useMutation(getAnalyzeScanMutationOptions(options));
+    }
+
+export const getGenerateScanRecipeUrl = () => {
+
+
+
+
+  return `/api/scans/generate`
+}
+
+/**
+ * @summary Generate an enhanced recipe from scanned ingredients and save the scan
+ */
+export const generateScanRecipe = async (scanGenerateInput: ScanGenerateInput, options?: RequestInit): Promise<ScanRecipe> => {
+
+  return customFetch<ScanRecipe>(getGenerateScanRecipeUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      scanGenerateInput,)
+  }
+);}
+
+
+
+
+export const getGenerateScanRecipeMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateScanRecipe>>, TError,{data: BodyType<ScanGenerateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateScanRecipe>>, TError,{data: BodyType<ScanGenerateInput>}, TContext> => {
+
+const mutationKey = ['generateScanRecipe'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateScanRecipe>>, {data: BodyType<ScanGenerateInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateScanRecipe(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateScanRecipeMutationResult = NonNullable<Awaited<ReturnType<typeof generateScanRecipe>>>
+    export type GenerateScanRecipeMutationBody = BodyType<ScanGenerateInput>
+    export type GenerateScanRecipeMutationError = ErrorType<void>
+
+    /**
+ * @summary Generate an enhanced recipe from scanned ingredients and save the scan
+ */
+export const useGenerateScanRecipe = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateScanRecipe>>, TError,{data: BodyType<ScanGenerateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateScanRecipe>>,
+        TError,
+        {data: BodyType<ScanGenerateInput>},
+        TContext
+      > => {
+      return useMutation(getGenerateScanRecipeMutationOptions(options));
+    }
+
+export const getListScansUrl = (params: ListScansParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/scans?${stringifiedParams}` : `/api/scans`
+}
+
+/**
+ * @summary List ingredient scans for a user
+ */
+export const listScans = async (params: ListScansParams, options?: RequestInit): Promise<Scan[]> => {
+
+  return customFetch<Scan[]>(getListScansUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListScansQueryKey = (params?: ListScansParams,) => {
+    return [
+    `/api/scans`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListScansQueryOptions = <TData = Awaited<ReturnType<typeof listScans>>, TError = ErrorType<unknown>>(params: ListScansParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listScans>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListScansQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listScans>>> = ({ signal }) => listScans(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listScans>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListScansQueryResult = NonNullable<Awaited<ReturnType<typeof listScans>>>
+export type ListScansQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List ingredient scans for a user
+ */
+
+export function useListScans<TData = Awaited<ReturnType<typeof listScans>>, TError = ErrorType<unknown>>(
+ params: ListScansParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listScans>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListScansQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetScanUrl = (id: number,) => {
+
+
+
+
+  return `/api/scans/${id}`
+}
+
+/**
+ * @summary Get a single scan with its recipe
+ */
+export const getScan = async (id: number, options?: RequestInit): Promise<Scan> => {
+
+  return customFetch<Scan>(getGetScanUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetScanQueryKey = (id: number,) => {
+    return [
+    `/api/scans/${id}`
+    ] as const;
+    }
+
+
+export const getGetScanQueryOptions = <TData = Awaited<ReturnType<typeof getScan>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getScan>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetScanQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getScan>>> = ({ signal }) => getScan(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getScan>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetScanQueryResult = NonNullable<Awaited<ReturnType<typeof getScan>>>
+export type GetScanQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get a single scan with its recipe
+ */
+
+export function useGetScan<TData = Awaited<ReturnType<typeof getScan>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getScan>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetScanQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getDeleteScanUrl = (id: number,) => {
+
+
+
+
+  return `/api/scans/${id}`
+}
+
+/**
+ * @summary Delete a scan
+ */
+export const deleteScan = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteScanUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteScanMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteScan>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteScan>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteScan'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteScan>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteScan(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteScanMutationResult = NonNullable<Awaited<ReturnType<typeof deleteScan>>>
+
+    export type DeleteScanMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a scan
+ */
+export const useDeleteScan = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteScan>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteScan>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteScanMutationOptions(options));
+    }
 

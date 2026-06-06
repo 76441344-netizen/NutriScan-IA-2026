@@ -69,7 +69,60 @@ export interface RecipeStats {
   topIngredient: string | null;
 }
 
+export interface ScanAnalyzeInput {
+  userId: number;
+  /** Base64 encoded image data */
+  imageBase64: string;
+  /** MIME type of the image (e.g. image/jpeg) */
+  mimeType: string;
+}
+
+export interface ScanAnalyzeResult {
+  /** List of detected food ingredients */
+  ingredients: string[];
+}
+
+export interface ScanGenerateInput {
+  userId: number;
+  ingredients: string[];
+  imageBase64: string;
+  mimeType: string;
+}
+
+export interface ScanRecipe {
+  id: number;
+  userId: number;
+  nombre: string;
+  ingredientesDetectados: string[];
+  ingredientes: string;
+  pasos: string;
+  tiempo_preparacion: string;
+  beneficios: string;
+  /** Bajo, Medio, or Alto */
+  nivelHierro: string;
+  prevencion_anemia: string;
+  consejos_absorcion: string;
+  createdAt: string;
+}
+
+export interface Scan {
+  id: number;
+  userId: number;
+  ingredientesDetectados: string;
+  /** @nullable */
+  nombre?: string | null;
+  /** @nullable */
+  nivelHierro?: string | null;
+  /** @nullable */
+  recipeData?: string | null;
+  createdAt: string;
+}
+
 export type ListRecipesParams = {
+userId: number;
+};
+
+export type ListScansParams = {
 userId: number;
 };
 

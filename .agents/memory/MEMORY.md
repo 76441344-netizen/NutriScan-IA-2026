@@ -1,0 +1,2 @@
+- [Groq vision model](groq-vision.md) — use `meta-llama/llama-4-scout-17b-16e-instruct` for image analysis; it's the only vision model available on this Groq account
+- [API server validation](api-server-validation.md) — api-server has no zod/zod-v4 dep; use `@workspace/api-zod` schemas or manual validation in route handlers

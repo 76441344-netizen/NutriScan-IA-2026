@@ -8,9 +8,15 @@
 
 export * from './healthStatus';
 export * from './listRecipesParams';
+export * from './listScansParams';
 export * from './recipe';
 export * from './recipeGenerateInput';
 export * from './recipeStats';
+export * from './scan';
+export * from './scanAnalyzeInput';
+export * from './scanAnalyzeResult';
+export * from './scanGenerateInput';
+export * from './scanRecipe';
 export * from './user';
 export * from './userInput';
 export * from './userUpdate';

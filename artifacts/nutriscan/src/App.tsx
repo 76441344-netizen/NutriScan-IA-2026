@@ -12,6 +12,7 @@ import Generate from "@/pages/generate";
 import History from "@/pages/history";
 import RecipeDetail from "@/pages/recipe-detail";
 import Profile from "@/pages/profile";
+import Scan from "@/pages/scan";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/registro" component={Register} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/escanear" component={Scan} />
         <Route path="/generar" component={Generate} />
         <Route path="/historial" component={History} />
         <Route path="/receta/:id" component={RecipeDetail} />
