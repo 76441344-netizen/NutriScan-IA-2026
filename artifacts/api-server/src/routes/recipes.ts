@@ -27,29 +27,45 @@ router.post("/recipes/generate", async (req, res) => {
 
   const prompt = `Eres un nutricionista experto en alimentación infantil y prevención de anemia en niños latinoamericanos.
 
-El usuario es una madre/padre con ${user.ninos} niño(s) de edades: ${user.edades || "no especificado"}. La familia tiene ${user.integrantes} integrantes, un presupuesto ${user.presupuesto} y puede dedicar ${user.tiempo_cocina} minutos a cocinar.
+Contexto familiar: ${user.ninos} niño(s) de edades ${user.edades || "no especificado"}. Familia de ${user.integrantes} integrantes, presupuesto ${user.presupuesto}, tiempo disponible para cocinar: ${user.tiempo_cocina} minutos.
 
-Con los siguientes ingredientes disponibles: ${ingredientes}
+Ingredientes disponibles: ${ingredientes}
 
-Genera UNA receta saludable, nutritiva y apropiada para niños. La receta DEBE ayudar a prevenir la anemia infantil incluyendo ingredientes ricos en hierro o que mejoren su absorción cuando sea posible.
+Genera UNA receta saludable, nutritiva y apropiada para niños que ayude a prevenir la anemia infantil, incluyendo ingredientes ricos en hierro o que mejoren su absorción cuando sea posible.
 
 Responde ÚNICAMENTE con un JSON válido con esta estructura exacta (sin markdown, sin explicaciones adicionales):
 {
-  "nombre": "Nombre de la receta",
-  "ingredientes": "Lista detallada de ingredientes con cantidades, uno por línea",
-  "pasos": "Pasos de preparación numerados, uno por línea",
+  "nombre": "Nombre atractivo de la receta",
+  "porciones": "4 porciones",
+  "dificultad": "Fácil",
+  "ingredientes": "Lista detallada de ingredientes con cantidades exactas, uno por línea",
+  "pasos": "Pasos de preparación numerados y detallados, uno por línea",
   "tiempo_preparacion": "X minutos",
+  "calorias": "350 kcal por porción",
+  "proteinas": "18g por porción",
+  "carbohidratos": "42g por porción",
+  "grasas": "8g por porción",
   "beneficios": "Beneficios nutricionales principales de la receta para los niños",
-  "prevencion_anemia": "Explicación específica de cómo esta receta ayuda a prevenir la anemia en niños"
-}`;
+  "prevencion_anemia": "Explicación específica de cómo esta receta ayuda a prevenir la anemia en niños",
+  "recomendacion_ninos": "Consejo específico para presentar esta receta a los niños y hacerla más apetitosa"
+}
+
+Para dificultad usa exactamente uno de: "Fácil", "Media" o "Avanzada".`;
 
   let recipeData: {
     nombre: string;
+    porciones: string;
+    dificultad: string;
     ingredientes: string;
     pasos: string;
     tiempo_preparacion: string;
+    calorias: string;
+    proteinas: string;
+    carbohidratos: string;
+    grasas: string;
     beneficios: string;
     prevencion_anemia: string;
+    recomendacion_ninos: string;
   };
 
   try {
@@ -57,7 +73,7 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta (sin markdow
       model: "llama-3.3-70b-versatile",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
-      max_tokens: 1024,
+      max_tokens: 1500,
     });
 
     const content = completion.choices[0]?.message?.content ?? "";
@@ -78,6 +94,13 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta (sin markdow
     beneficios: recipeData.beneficios,
     prevencion_anemia: recipeData.prevencion_anemia,
     ingredientesUsados: ingredientes,
+    porciones: recipeData.porciones,
+    dificultad: recipeData.dificultad,
+    calorias: recipeData.calorias,
+    proteinas: recipeData.proteinas,
+    carbohidratos: recipeData.carbohidratos,
+    grasas: recipeData.grasas,
+    recomendacion_ninos: recipeData.recomendacion_ninos,
   }).returning();
 
   return res.json({

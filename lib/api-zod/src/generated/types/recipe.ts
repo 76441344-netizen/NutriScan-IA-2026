@@ -16,5 +16,12 @@ export interface Recipe {
   beneficios: string;
   prevencion_anemia: string;
   ingredientesUsados: string;
+  porciones?: string | null;
+  dificultad?: string | null;
+  calorias?: string | null;
+  proteinas?: string | null;
+  carbohidratos?: string | null;
+  grasas?: string | null;
+  recomendacion_ninos?: string | null;
   createdAt: string;
 }

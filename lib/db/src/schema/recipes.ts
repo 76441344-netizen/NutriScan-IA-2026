@@ -13,6 +13,13 @@ export const recipesTable = pgTable("recipes", {
   beneficios: text("beneficios").notNull(),
   prevencion_anemia: text("prevencion_anemia").notNull(),
   ingredientesUsados: text("ingredientes_usados").notNull(),
+  porciones: text("porciones"),
+  dificultad: text("dificultad"),
+  calorias: text("calorias"),
+  proteinas: text("proteinas"),
+  carbohidratos: text("carbohidratos"),
+  grasas: text("grasas"),
+  recomendacion_ninos: text("recomendacion_ninos"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -105,6 +105,13 @@ export const GenerateRecipeResponse = zod.object({
   "beneficios": zod.string(),
   "prevencion_anemia": zod.string(),
   "ingredientesUsados": zod.string(),
+  "porciones": zod.string().nullish(),
+  "dificultad": zod.string().nullish(),
+  "calorias": zod.string().nullish(),
+  "proteinas": zod.string().nullish(),
+  "carbohidratos": zod.string().nullish(),
+  "grasas": zod.string().nullish(),
+  "recomendacion_ninos": zod.string().nullish(),
   "createdAt": zod.string()
 })
 
@@ -126,6 +133,13 @@ export const ListRecipesResponseItem = zod.object({
   "beneficios": zod.string(),
   "prevencion_anemia": zod.string(),
   "ingredientesUsados": zod.string(),
+  "porciones": zod.string().nullish(),
+  "dificultad": zod.string().nullish(),
+  "calorias": zod.string().nullish(),
+  "proteinas": zod.string().nullish(),
+  "carbohidratos": zod.string().nullish(),
+  "grasas": zod.string().nullish(),
+  "recomendacion_ninos": zod.string().nullish(),
   "createdAt": zod.string()
 })
 export const ListRecipesResponse = zod.array(ListRecipesResponseItem)
@@ -148,6 +162,13 @@ export const GetRecipeResponse = zod.object({
   "beneficios": zod.string(),
   "prevencion_anemia": zod.string(),
   "ingredientesUsados": zod.string(),
+  "porciones": zod.string().nullish(),
+  "dificultad": zod.string().nullish(),
+  "calorias": zod.string().nullish(),
+  "proteinas": zod.string().nullish(),
+  "carbohidratos": zod.string().nullish(),
+  "grasas": zod.string().nullish(),
+  "recomendacion_ninos": zod.string().nullish(),
   "createdAt": zod.string()
 })
 

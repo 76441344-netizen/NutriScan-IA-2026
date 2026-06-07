@@ -383,6 +383,27 @@ components:
           type: string
         ingredientesUsados:
           type: string
+        porciones:
+          type: string
+          nullable: true
+        dificultad:
+          type: string
+          nullable: true
+        calorias:
+          type: string
+          nullable: true
+        proteinas:
+          type: string
+          nullable: true
+        carbohidratos:
+          type: string
+          nullable: true
+        grasas:
+          type: string
+          nullable: true
+        recomendacion_ninos:
+          type: string
+          nullable: true
         createdAt:
           type: string
 

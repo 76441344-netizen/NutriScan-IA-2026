@@ -1,0 +1,218 @@
+Quiero que optimices y mejores significativamente todos los módulos de mi aplicación NutriElla, enfocada en nutrición familiar, madres y niños. La aplicación debe sentirse profesional, inteligente, rápida, organizada y fácil de usar.
+
+1. NUTRI-FOTO IA
+
+Mejorar completamente el análisis de imágenes de alimentos.
+
+Requisitos:
+Reconocer con mayor precisión ingredientes individuales y múltiples ingredientes en una misma fotografía.
+Detectar verduras, frutas, cereales, legumbres, carnes, pescado, pollo, sangrecita, huevo, lácteos y otros alimentos comunes.
+Mostrar una lista organizada de ingredientes detectados.
+Permitir corregir manualmente ingredientes detectados incorrectamente.
+Generar recetas automáticamente según los ingredientes encontrados.
+Mostrar:
+Nombre de la receta.
+Tiempo de preparación.
+Porciones.
+Nivel de dificultad.
+Ingredientes.
+Preparación paso a paso.
+Beneficios nutricionales.
+Recomendación para niños.
+Diseñar una interfaz moderna y visualmente atractiva.
+2. GENERAR RECETA
+
+Mejorar completamente el generador de recetas.
+
+La IA debe:
+Comprender correctamente los ingredientes ingresados.
+Generar recetas coherentes y realistas.
+Organizar la respuesta de forma clara.
+Formato obligatorio:
+
+Nombre de la receta
+
+Información general
+
+Tiempo
+Porciones
+Dificultad
+
+Ingredientes
+
+Preparación paso a paso
+
+Información nutricional
+
+Calorías aproximadas
+Proteínas
+Carbohidratos
+Grasas
+
+Beneficios para la salud
+
+Recomendaciones para niños
+
+La respuesta debe ser fácil de leer para cualquier madre.
+
+3. PLANNER SEMANAL
+
+Convertirlo en un verdadero planificador nutricional inteligente.
+
+Requisitos:
+Generar automáticamente desayunos, almuerzos, cenas y refrigerios para toda la semana.
+Mostrar los 7 días completos.
+Incluir variedad de alimentos.
+Evitar repetir comidas.
+Mostrar cantidades recomendadas.
+Adaptar menús para niños.
+Permitir editar cualquier comida.
+Generar automáticamente la lista de compras semanal.
+
+Debe estar completamente desarrollado dentro de la aplicación para que la madre pueda seguirlo sin necesidad de escribir instrucciones adicionales.
+
+4. CHEF IA
+
+Mejorar la calidad de las respuestas.
+
+Debe:
+Responder de forma organizada.
+Utilizar títulos, subtítulos y listas.
+Dar consejos nutricionales.
+Sugerir alternativas saludables.
+Resolver dudas sobre alimentación infantil.
+Ser dinámico y conversacional.
+Mantener contexto durante toda la conversación.
+Actuar como un nutricionista virtual familiar.
+
+Formato visual moderno y profesional.
+
+5. MERCADO INTELIGENTE
+
+Rediseñar completamente este módulo.
+
+Agregar catálogo amplio de alimentos:
+Verduras
+Zanahoria
+Brócoli
+Espinaca
+Lechuga
+Tomate
+Pepino
+Betarraga
+Zapallo
+Coliflor
+Apio
+Frutas
+Manzana
+Plátano
+Naranja
+Mandarina
+Papaya
+Piña
+Pera
+Sandía
+Melón
+Uvas
+Proteínas
+Pollo
+Carne de res
+Carne molida
+Pescado
+Atún
+Cerdo
+Chuleta
+Sangrecita
+Hígado
+Huevo
+Cereales y granos
+Arroz
+Avena
+Quinua
+Trigo
+Lentejas
+Frejoles
+Garbanzos
+Funciones:
+Seleccionar productos mediante checkboxes.
+Marcar productos disponibles en casa.
+Mostrar inventario familiar.
+Generar compras faltantes automáticamente.
+Relacionar compras con el planner semanal.
+6. APRENDE
+
+Convertirlo en una biblioteca educativa inteligente.
+
+Agregar:
+Más artículos.
+Categorías.
+Buscador avanzado.
+Filtros.
+Temas:
+Alimentación infantil.
+Anemia.
+Desnutrición.
+Lactancia.
+Obesidad infantil.
+Loncheras saludables.
+Frutas y verduras.
+Hidratación.
+Vitaminas.
+Desarrollo infantil.
+Cada artículo debe contener:
+Título.
+Imagen.
+Introducción.
+Desarrollo.
+Consejos prácticos.
+Referencias.
+7. BIOHUERTO
+
+Expandir significativamente el módulo.
+
+Permitir cultivar:
+Lechuga.
+Espinaca.
+Tomate.
+Culantro.
+Perejil.
+Cebolla china.
+Zanahoria.
+Betarraga.
+Rabanito.
+Hierbabuena.
+Orégano.
+Albahaca.
+Ají.
+Mostrar:
+Tiempo de crecimiento.
+Nivel de dificultad.
+Cuidados.
+Frecuencia de riego.
+Beneficios nutricionales.
+Cómo consumir cada cultivo.
+Función IA:
+
+La IA debe recomendar qué sembrar según:
+
+Espacio disponible.
+Clima.
+Tiempo de cuidado.
+Necesidades nutricionales familiares.
+8. MEJORAS GENERALES DE IA
+
+La inteligencia artificial debe:
+
+Comprender mejor las preguntas.
+Mantener contexto.
+Dar respuestas más naturales.
+Reconocer errores de escritura.
+Ser rápida.
+Generar respuestas bien estructuradas.
+Tener una experiencia similar a ChatGPT.
+Adaptarse a madres con pocos conocimientos de nutrición.
+Priorizar alimentación infantil saludable.
+Mostrar información nutricional confiable.
+Tener diseño moderno, responsivo y profesional.
+
+Objetivo final: convertir NutriElla en una plataforma integral de nutrición familiar inteligente, donde una madre pueda planificar, aprender, comprar, cocinar y mejorar la alimentación de sus hijos utilizando inteligencia artificial avanzada.

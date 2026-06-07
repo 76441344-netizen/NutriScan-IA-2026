@@ -24,25 +24,26 @@ router.post("/scans/analyze", async (req, res) => {
           content: [
             {
               type: "image_url",
-              image_url: {
-                url: `data:${mimeType};base64,${imageBase64}`,
-              },
+              image_url: { url: `data:${mimeType};base64,${imageBase64}` },
             },
             {
               type: "text",
-              text: `Eres un experto en nutrición y alimentación. Analiza esta imagen y detecta todos los ingredientes o alimentos visibles.
+              text: `Eres un experto nutricionista. Analiza esta imagen con mucho detalle e identifica TODOS los ingredientes y alimentos visibles.
 
-Responde ÚNICAMENTE con un JSON válido con esta estructura exacta (sin markdown, sin explicaciones):
+Puedes detectar: verduras (espinaca, zanahoria, brócoli, tomate, cebolla, ajo, pimiento, zapallo, betarraga, papa, apio, pepino, lechuga, coliflor), frutas (manzana, plátano, naranja, limón, pera, uvas, papaya, piña, mango), carnes y proteínas (pollo, carne de res, carne molida, pescado, atún, huevo, sangrecita, hígado, cerdo), granos y cereales (arroz, lentejas, quinoa, avena, frijoles, garbanzos, trigo, pan, pasta), lácteos (leche, queso, yogur, mantequilla) y otros alimentos procesados o frescos.
+
+Responde ÚNICAMENTE con un JSON válido (sin markdown, sin explicaciones):
 {
-  "ingredients": ["ingrediente1", "ingrediente2", "ingrediente3"]
+  "ingredients": ["ingrediente1", "ingrediente2"],
+  "confidence": "alta"
 }
 
-Lista solo los ingredientes/alimentos que puedas ver claramente. Si no hay alimentos visibles, devuelve una lista vacía. Los nombres deben estar en español.`,
+Sé específico con los nombres. Si ves varios alimentos del mismo tipo, listarlos individualmente. En español siempre.`,
             },
           ],
         },
       ],
-      temperature: 0.2,
+      temperature: 0.1,
       max_tokens: 512,
     });
 
@@ -61,7 +62,12 @@ Lista solo los ingredientes/alimentos que puedas ver claramente. Si no hay alime
 });
 
 router.post("/scans/generate", async (req, res) => {
-  const { userId, ingredients, imageBase64, mimeType } = req.body as { userId: number; ingredients: string[]; imageBase64: string; mimeType: string };
+  const { userId, ingredients, imageBase64, mimeType } = req.body as {
+    userId: number;
+    ingredients: string[];
+    imageBase64: string;
+    mimeType: string;
+  };
   if (!userId || !ingredients || !imageBase64 || !mimeType) {
     return res.status(400).json({ error: "Faltan campos requeridos" });
   }
@@ -76,35 +82,49 @@ router.post("/scans/generate", async (req, res) => {
 
   const prompt = `Eres un nutricionista experto en alimentación infantil y prevención de anemia en niños latinoamericanos.
 
-El usuario es una madre/padre con ${user.ninos} niño(s) de edades: ${user.edades || "no especificado"}. La familia tiene ${user.integrantes} integrantes, presupuesto ${user.presupuesto} y puede dedicar ${user.tiempo_cocina} minutos a cocinar.
+Contexto familiar: ${user.ninos} niño(s) de edades ${user.edades || "no especificado"}. Familia de ${user.integrantes} integrantes, presupuesto ${user.presupuesto}, tiempo para cocinar: ${user.tiempo_cocina} minutos.
 
-Se detectaron los siguientes ingredientes en la imagen: ${ingredientsList}
+Se detectaron en la imagen los siguientes ingredientes: ${ingredientsList}
 
-Genera UNA receta saludable, nutritiva y apropiada para niños. La receta DEBE enfocarse en prevenir la anemia infantil.
+Genera UNA receta completa, saludable, nutritiva y apropiada para niños. Prioriza la prevención de anemia infantil.
 
-Responde ÚNICAMENTE con un JSON válido con esta estructura exacta (sin markdown, sin explicaciones adicionales):
+Responde ÚNICAMENTE con un JSON válido con esta estructura exacta (sin markdown):
 {
-  "nombre": "Nombre de la receta",
-  "ingredientes": "Lista detallada de ingredientes con cantidades, uno por línea",
-  "pasos": "Pasos de preparación numerados, uno por línea",
+  "nombre": "Nombre atractivo de la receta",
+  "porciones": "X porciones",
+  "dificultad": "Fácil",
+  "ingredientes": "Lista detallada con cantidades exactas, uno por línea",
+  "pasos": "Pasos numerados y detallados, uno por línea",
   "tiempo_preparacion": "X minutos",
-  "beneficios": "Beneficios nutricionales principales de la receta para los niños",
-  "nivelHierro": "Bajo",
-  "prevencion_anemia": "Explicación específica de cómo esta receta ayuda a prevenir la anemia en niños",
-  "consejos_absorcion": "Consejos prácticos para mejorar la absorción del hierro al comer esta receta"
+  "calorias": "XXX kcal por porción",
+  "proteinas": "Xg por porción",
+  "carbohidratos": "Xg por porción",
+  "grasas": "Xg por porción",
+  "beneficios": "Beneficios nutricionales principales para niños",
+  "nivelHierro": "Medio",
+  "prevencion_anemia": "Cómo esta receta ayuda a prevenir la anemia en niños",
+  "consejos_absorcion": "Consejos para mejorar la absorción del hierro",
+  "recomendacion_ninos": "Cómo presentar esta receta a los niños para que la disfruten"
 }
 
-Para nivelHierro usa exactamente uno de: "Bajo", "Medio" o "Alto" según el contenido de hierro de los ingredientes.`;
+Para dificultad usa: "Fácil", "Media" o "Avanzada". Para nivelHierro usa: "Bajo", "Medio" o "Alto".`;
 
   type RecipeData = {
     nombre: string;
+    porciones: string;
+    dificultad: string;
     ingredientes: string;
     pasos: string;
     tiempo_preparacion: string;
+    calorias: string;
+    proteinas: string;
+    carbohidratos: string;
+    grasas: string;
     beneficios: string;
     nivelHierro: string;
     prevencion_anemia: string;
     consejos_absorcion: string;
+    recomendacion_ninos: string;
   };
 
   let recipeData: RecipeData;
@@ -124,8 +144,8 @@ Para nivelHierro usa exactamente uno de: "Bajo", "Medio" o "Alto" según el cont
           ],
         },
       ],
-      temperature: 0.7,
-      max_tokens: 1200,
+      temperature: 0.6,
+      max_tokens: 1500,
     });
 
     const content = completion.choices[0]?.message?.content ?? "";
@@ -149,14 +169,21 @@ Para nivelHierro usa exactamente uno de: "Bajo", "Medio" o "Alto" según el cont
     id: scan.id,
     userId: scan.userId,
     nombre: recipeData.nombre,
+    porciones: recipeData.porciones,
+    dificultad: recipeData.dificultad,
     ingredientesDetectados: ingredients,
     ingredientes: recipeData.ingredientes,
     pasos: recipeData.pasos,
     tiempo_preparacion: recipeData.tiempo_preparacion,
+    calorias: recipeData.calorias,
+    proteinas: recipeData.proteinas,
+    carbohidratos: recipeData.carbohidratos,
+    grasas: recipeData.grasas,
     beneficios: recipeData.beneficios,
     nivelHierro: recipeData.nivelHierro,
     prevencion_anemia: recipeData.prevencion_anemia,
     consejos_absorcion: recipeData.consejos_absorcion,
+    recomendacion_ninos: recipeData.recomendacion_ninos,
     createdAt: scan.createdAt.toISOString(),
   });
 });
