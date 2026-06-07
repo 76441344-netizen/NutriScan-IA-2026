@@ -1,0 +1,146 @@
+Improve NutriScan IA and redesign the entire application structure.
+
+The application must have the following sections:
+
+1. REGISTRO Y PERFIL FAMILIAR
+
+Allow users to register and create their family profile.
+
+Fields:
+
+* Nombre completo
+* Número de integrantes
+* Número de niños
+* Edades de los niños
+* Presupuesto semanal para alimentación
+* Tiempo disponible para cocinar
+* Distrito o comunidad
+
+Save all information in Supabase.
+
+---
+
+2. ESCANEAR INGREDIENTES CON IA
+
+Allow the mother to:
+
+* Upload a photo from gallery.
+* Take a photo with the camera.
+* Write ingredients manually.
+
+The system must:
+
+* Detect ingredients from the image.
+* Display detected ingredients.
+* Allow editing detected ingredients.
+* Generate personalized recipes using AI.
+
+Recipe output must include:
+
+* Nombre de la receta
+* Ingredientes
+* Preparación paso a paso
+* Tiempo de preparación
+* Beneficios nutricionales
+* Nivel de hierro
+* Recomendaciones para prevenir anemia
+* Recomendaciones para niños
+
+Save image, ingredients and recipe in Supabase.
+
+---
+
+3. RECETAS SALUDABLES
+
+Create a recipe library section.
+
+Categories:
+
+* Desayunos
+* Almuerzos
+* Cenas
+* Refrigerios saludables
+* Recetas ricas en hierro
+* Recetas económicas
+
+Each recipe must include:
+
+* Image
+* Ingredients
+* Preparation
+* Nutritional benefits
+* Iron level
+
+Allow users to save favorite recipes.
+
+---
+
+4. BIOHUERTO EDUCATIVO
+
+Create a complete educational section about growing foods at home.
+
+Include:
+
+* Cebolla china
+* Perejil
+* Culantro
+* Espinaca
+* Lechuga
+* Beterraga
+* Zanahoria
+* Tomate
+
+For each plant show:
+
+* Image
+* Description
+* Nutritional benefits
+* Planting method
+* Water requirements
+* Harvest time
+* Tips for home cultivation
+
+Create cards with modern design.
+
+---
+
+5. PANEL PRINCIPAL (DASHBOARD)
+
+Create a modern dashboard showing:
+
+* Total recipes generated
+* Favorite recipes
+* Ingredients most used
+* Family nutritional recommendations
+
+Quick access buttons:
+
+* Escanear ingredientes
+* Generar receta
+* Ver historial
+* Biohuerto educativo
+* Mi perfil
+
+---
+
+DESIGN REQUIREMENTS
+
+* Modern and professional interface.
+* Friendly for Peruvian mothers.
+* Mobile responsive.
+* Green and orange color palette.
+* Nutritional and healthy food theme.
+* Attractive icons and illustrations.
+* Simple navigation menu.
+
+---
+
+TECHNICAL REQUIREMENTS
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* Supabase
+* Groq API
+
+Maintain all existing functionality and improve user experience.
