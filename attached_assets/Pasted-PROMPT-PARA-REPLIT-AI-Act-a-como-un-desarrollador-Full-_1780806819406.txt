@@ -1,0 +1,170 @@
+PROMPT PARA REPLIT AI
+
+Actúa como un desarrollador Full Stack Senior especializado en React, Next.js, Node.js, PostgreSQL, IA y UX/UI.
+
+Tengo una aplicación funcional llamada Nutri IA. NO quiero que reemplaces ni elimines ninguna funcionalidad existente. Quiero que analices la estructura actual del proyecto y agregues nuevas características manteniendo toda la lógica, diseño, navegación y base de datos ya implementadas.
+
+OBJETIVO
+
+Mejorar Nutri IA convirtiéndola en una plataforma integral de nutrición familiar inteligente enfocada en la prevención de anemia y promoción de hábitos saludables.
+
+IMPORTANTE
+Mantener todo el sistema actual funcionando.
+No eliminar componentes existentes.
+No modificar rutas ya implementadas.
+No romper dependencias existentes.
+Reutilizar la arquitectura actual.
+Integrar las nuevas funciones con la base de datos ya creada.
+Optimizar rendimiento y experiencia de usuario.
+NUEVOS MÓDULOS A INTEGRAR
+1. PANEL DE IMPACTO AVANZADO
+
+Agregar un dashboard inteligente que se actualice automáticamente con la información registrada por los usuarios.
+
+Indicadores:
+
+Familias registradas.
+Usuarios activos.
+Menús semanales creados.
+Recetas generadas.
+Retos completados.
+Alimentos saludables registrados.
+Consumo semanal de hierro.
+Consumo semanal de frutas.
+Consumo semanal de verduras.
+Riesgo nutricional familiar.
+Progreso mensual.
+
+Agregar gráficos dinámicos con Chart.js o Recharts.
+
+2. NUTRI-FOTO IA MEJORADO
+
+Mejorar el sistema de reconocimiento de alimentos.
+
+Cuando el usuario suba una foto:
+
+Detectar alimentos automáticamente.
+Identificar nutrientes principales.
+Calcular aporte de hierro.
+Calcular proteínas.
+Calcular vitaminas.
+Sugerir recetas usando únicamente los alimentos detectados.
+Detectar alimentos faltantes para una dieta equilibrada.
+3. CHEF IA NUTRI IA
+
+Integrar un asistente nutricional inteligente.
+
+Debe responder preguntas sobre:
+
+Alimentación saludable.
+Prevención de anemia.
+Recetas económicas.
+Alimentación infantil.
+Nutrición familiar.
+
+Debe generar:
+
+Recetas personalizadas.
+Menús semanales.
+Recomendaciones nutricionales.
+4. MERCADO INTELIGENTE
+
+Crear listas automáticas de compras basadas en:
+
+Menú semanal.
+Cantidad de integrantes.
+Presupuesto familiar.
+
+Mostrar:
+
+Producto.
+Cantidad.
+Precio estimado.
+Total proyectado.
+
+Priorizar alimentos ricos en hierro y económicos.
+
+5. PLANNER SEMANAL INTELIGENTE
+
+Permitir:
+
+Planificar desayuno.
+Almuerzo.
+Cena.
+Refrigerios.
+
+Agregar:
+
+Calendario visual.
+Generación automática de menús.
+Recordatorios.
+Seguimiento del cumplimiento.
+6. RETOS FAMILIARES
+
+Crear sistema de gamificación.
+
+Ejemplos:
+
+Consumir frutas durante 5 días.
+Beber suficiente agua.
+Preparar una receta saludable.
+Consumir alimentos ricos en hierro.
+
+Agregar:
+
+Sistema de puntos.
+Insignias.
+Niveles.
+Ranking familiar.
+7. COMUNIDAD NUTRIVECINA
+
+Crear espacio colaborativo donde los usuarios puedan:
+
+Compartir recetas.
+Compartir experiencias.
+Publicar consejos.
+Comentar publicaciones.
+Dar reacciones.
+8. APRENDE
+
+Crear biblioteca educativa con:
+
+Nutrición familiar.
+Prevención de anemia.
+Vitaminas.
+Minerales.
+Alimentación infantil.
+Estilos de vida saludables.
+
+Agregar buscador inteligente.
+
+9. BIOHUERTO
+
+Crear módulo educativo para:
+
+Cultivo doméstico.
+Calendario de siembra.
+Guías paso a paso.
+Beneficios nutricionales de cada cultivo.
+INTEGRACIÓN GENERAL
+
+Todos los módulos deben conectarse con el Panel de Impacto.
+
+Por ejemplo:
+
+Si se genera una receta → actualizar estadísticas.
+Si se completa un reto → actualizar progreso.
+Si se crea un menú → actualizar indicadores.
+Si se analiza una foto → actualizar métricas nutricionales.
+MEJORAS DE EXPERIENCIA DE USUARIO
+Diseño moderno y profesional.
+Animaciones suaves.
+Responsive para móvil y computadora.
+Mayor velocidad de carga.
+Optimización de consultas.
+Mejor accesibilidad.
+RESULTADO FINAL
+
+Analiza el proyecto existente de Nutri IA y agrega estas funcionalidades de manera profesional, escalable y completamente integrada, sin afectar las características que actualmente funcionan.
+
+Además, identifica posibles mejoras técnicas y de experiencia de usuario para hacer que Nutri IA tenga apariencia y funcionamiento de una aplicación lista para producción.
