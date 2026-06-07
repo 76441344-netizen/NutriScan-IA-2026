@@ -13,6 +13,14 @@ import History from "@/pages/history";
 import RecipeDetail from "@/pages/recipe-detail";
 import Profile from "@/pages/profile";
 import Scan from "@/pages/scan";
+import Chef from "@/pages/chef";
+import Planner from "@/pages/planner";
+import Mercado from "@/pages/mercado";
+import Retos from "@/pages/retos";
+import Comunidad from "@/pages/comunidad";
+import Aprende from "@/pages/aprende";
+import Biohuerto from "@/pages/biohuerto";
+import Impacto from "@/pages/impacto";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +36,14 @@ function Router() {
         <Route path="/historial" component={History} />
         <Route path="/receta/:id" component={RecipeDetail} />
         <Route path="/perfil" component={Profile} />
+        <Route path="/chef" component={Chef} />
+        <Route path="/planner" component={Planner} />
+        <Route path="/mercado" component={Mercado} />
+        <Route path="/retos" component={Retos} />
+        <Route path="/comunidad" component={Comunidad} />
+        <Route path="/aprende" component={Aprende} />
+        <Route path="/biohuerto" component={Biohuerto} />
+        <Route path="/impacto" component={Impacto} />
         <Route component={NotFound} />
       </Switch>
     </Layout>
