@@ -5,83 +5,44 @@ import { getUserId, clearUserId } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import {
   Sparkles, History, User, LogOut, TrendingUp, ChefHat, Calendar,
-  Camera, Bot, ShoppingCart, Trophy, Users, BookOpen, Leaf
+  Camera, Bot, ShoppingCart, Trophy, Users, BookOpen, Leaf, Star, Heart, Zap
 } from "lucide-react";
 
 const MODULES = [
-  {
-    href: "/chef",
-    icon: Bot,
-    title: "Chef IA",
-    desc: "Asistente nutricional inteligente",
-    color: "from-violet-500 to-purple-500",
-    textColor: "text-white",
-    featured: false,
-  },
-  {
-    href: "/planner",
-    icon: Calendar,
-    title: "Planner Semanal",
-    desc: "Organiza las comidas de la semana",
-    color: "from-blue-500 to-cyan-500",
-    textColor: "text-white",
-    featured: false,
-  },
-  {
-    href: "/mercado",
-    icon: ShoppingCart,
-    title: "Mercado Inteligente",
-    desc: "Lista de compras automática",
-    color: "from-emerald-500 to-green-500",
-    textColor: "text-white",
-    featured: false,
-  },
-  {
-    href: "/retos",
-    icon: Trophy,
-    title: "Retos Familiares",
-    desc: "Gamificación y hábitos saludables",
-    color: "from-amber-500 to-orange-500",
-    textColor: "text-white",
-    featured: false,
-  },
-  {
-    href: "/comunidad",
-    icon: Users,
-    title: "Comunidad",
-    desc: "Comparte con otras familias",
-    color: "from-pink-500 to-rose-500",
-    textColor: "text-white",
-    featured: false,
-  },
-  {
-    href: "/aprende",
-    icon: BookOpen,
-    title: "Aprende",
-    desc: "Biblioteca de nutrición familiar",
-    color: "from-teal-500 to-emerald-600",
-    textColor: "text-white",
-    featured: false,
-  },
-  {
-    href: "/biohuerto",
-    icon: Leaf,
-    title: "Biohuerto",
-    desc: "Cultiva tus propios alimentos",
-    color: "from-lime-500 to-green-600",
-    textColor: "text-white",
-    featured: false,
-  },
-  {
-    href: "/impacto",
-    icon: TrendingUp,
-    title: "Panel de Impacto",
-    desc: "Tu huella nutricional familiar",
-    color: "from-indigo-500 to-blue-600",
-    textColor: "text-white",
-    featured: false,
-  },
+  { href: "/chef", icon: Bot, title: "Chef IA", desc: "Asistente nutricional", color: "from-violet-500 to-purple-600" },
+  { href: "/planner", icon: Calendar, title: "Planner Semanal", desc: "Organiza las comidas", color: "from-blue-500 to-cyan-500" },
+  { href: "/mercado", icon: ShoppingCart, title: "Mercado Inteligente", desc: "Lista de compras", color: "from-emerald-500 to-green-600" },
+  { href: "/retos", icon: Trophy, title: "Retos Familiares", desc: "Hábitos saludables", color: "from-amber-500 to-orange-500" },
+  { href: "/comunidad", icon: Users, title: "Comunidad", desc: "Comparte con familias", color: "from-pink-500 to-rose-500" },
+  { href: "/aprende", icon: BookOpen, title: "Aprende", desc: "Biblioteca de nutrición", color: "from-teal-500 to-emerald-600" },
+  { href: "/biohuerto", icon: Leaf, title: "Biohuerto", desc: "Cultiva tus alimentos", color: "from-lime-500 to-green-600" },
+  { href: "/impacto", icon: TrendingUp, title: "Panel de Impacto", desc: "Tu huella nutricional", color: "from-indigo-500 to-blue-600" },
 ];
+
+const MOTIVATIONAL_MESSAGES = [
+  { text: "¡Cada receta que preparas es un acto de amor! 💚", icon: "💚" },
+  { text: "Hoy es un gran día para cuidar la salud de tus hijos 🌟", icon: "🌟" },
+  { text: "¡Tú puedes prevenir la anemia con comida deliciosa! 💪", icon: "💪" },
+  { text: "Una madre nutrida cría hijos saludables y felices 🥰", icon: "🥰" },
+  { text: "¡Pequeños cambios en la dieta hacen grandes diferencias! 🌱", icon: "🌱" },
+  { text: "El hierro en sangrecita y lentejas es tu mejor aliado 🩸", icon: "🩸" },
+  { text: "¡Sigue así! Tu familia te lo agradecerá siempre ⭐", icon: "⭐" },
+];
+
+const NUTRITION_TIPS = [
+  "💡 Combina lentejas + naranja para triplicar la absorción de hierro",
+  "💡 La sangrecita tiene 29mg de hierro por cada 100g — ¡la más nutritiva!",
+  "💡 Agrega limón a tus guisos para que el hierro se absorba mejor",
+  "💡 La quinoa tiene todos los aminoácidos esenciales para el crecimiento",
+  "💡 Un huevo al día aporta proteínas, vitaminas y hierro para los niños",
+];
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "¡Buenos días";
+  if (hour < 18) return "¡Buenas tardes";
+  return "¡Buenas noches";
+}
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
@@ -106,126 +67,164 @@ export default function Dashboard() {
 
   if (!userId) return null;
 
+  const dayIndex = new Date().getDay();
+  const motivMsg = MOTIVATIONAL_MESSAGES[dayIndex % MOTIVATIONAL_MESSAGES.length];
+  const tip = NUTRITION_TIPS[dayIndex % NUTRITION_TIPS.length];
+
+  const getEncouragementMsg = () => {
+    const total = stats?.totalRecipes ?? 0;
+    if (total === 0) return "¡Genera tu primera receta hoy y empieza el camino hacia una familia más sana! 🚀";
+    if (total < 5) return `¡Vas muy bien! Ya tienes ${total} receta${total > 1 ? "s" : ""}. ¡Sigue así! 🌟`;
+    if (total < 20) return `¡Increíble! ${total} recetas generadas. ¡Tu familia come de maravilla! 💪`;
+    return `¡Eres una super mamá! ${total} recetas y creciendo. ¡Tus hijos te lo agradecen! 🏆`;
+  };
+
   return (
     <div className="flex-1 flex flex-col">
-      <div className="bg-primary text-primary-foreground py-10 px-4">
-        <div className="max-w-screen-lg mx-auto">
-          <p className="text-primary-foreground/70 text-sm font-medium uppercase tracking-wider mb-1">Panel principal</p>
-          <h1 className="text-3xl font-serif font-bold">
-            Hola, {user?.nombre || "..."}
-          </h1>
-          <p className="text-primary-foreground/80 mt-1">Genera recetas saludables para tus hijos con IA</p>
+      <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-8 px-4 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-16 translate-x-16" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-8 -translate-x-8" />
+        <div className="max-w-screen-lg mx-auto relative z-10">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-primary-foreground/70 text-sm font-medium mb-0.5">
+                {getGreeting()},
+              </p>
+              <h1 className="text-3xl font-serif font-bold">
+                {user?.nombre || "..."} 👋
+              </h1>
+              <p className="text-primary-foreground/80 mt-1 text-sm max-w-md">{getEncouragementMsg()}</p>
+            </div>
+            <div className="bg-white/20 p-2.5 rounded-full shrink-0">
+              <Heart className="h-6 w-6 fill-white/50" />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-screen-lg mx-auto w-full px-4 py-8 flex-1 flex flex-col gap-8">
+      <div className="max-w-screen-lg mx-auto w-full px-4 py-5 flex-1 flex flex-col gap-5">
+        <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-start gap-3">
+          <Star className="h-4 w-4 text-amber-500 fill-amber-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-amber-800">{motivMsg.text}</p>
+            <p className="text-xs text-amber-600 mt-0.5">{tip}</p>
+          </div>
+        </div>
+
         {stats && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-card border border-border rounded-2xl p-5 flex items-center gap-4" data-testid="stat-total">
-              <div className="bg-primary/10 p-3 rounded-xl">
-                <ChefHat className="h-6 w-6 text-primary" />
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-card border border-border rounded-2xl p-4 flex flex-col items-center text-center" data-testid="stat-total">
+              <div className="bg-primary/10 p-2.5 rounded-xl mb-2">
+                <ChefHat className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{stats.totalRecipes}</p>
-                <p className="text-sm text-muted-foreground">Recetas totales</p>
-              </div>
+              <p className="text-2xl font-bold text-foreground">{stats.totalRecipes}</p>
+              <p className="text-xs text-muted-foreground leading-tight">Recetas creadas</p>
             </div>
-            <div className="bg-card border border-border rounded-2xl p-5 flex items-center gap-4" data-testid="stat-month">
-              <div className="bg-secondary/10 p-3 rounded-xl">
-                <Calendar className="h-6 w-6 text-secondary" />
+            <div className="bg-card border border-border rounded-2xl p-4 flex flex-col items-center text-center" data-testid="stat-month">
+              <div className="bg-secondary/10 p-2.5 rounded-xl mb-2">
+                <Zap className="h-5 w-5 text-secondary" />
               </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{stats.thisMonth}</p>
-                <p className="text-sm text-muted-foreground">Este mes</p>
-              </div>
+              <p className="text-2xl font-bold text-foreground">{stats.thisMonth}</p>
+              <p className="text-xs text-muted-foreground leading-tight">Este mes</p>
             </div>
-            {stats.topIngredient && (
-              <div className="bg-card border border-border rounded-2xl p-5 flex items-center gap-4" data-testid="stat-ingredient">
-                <div className="bg-accent/10 p-3 rounded-xl">
-                  <TrendingUp className="h-6 w-6 text-accent-foreground" />
+            {stats.topIngredient ? (
+              <div className="bg-card border border-border rounded-2xl p-4 flex flex-col items-center text-center" data-testid="stat-ingredient">
+                <div className="bg-green-100 p-2.5 rounded-xl mb-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
                 </div>
-                <div>
-                  <p className="text-base font-bold text-foreground capitalize">{stats.topIngredient}</p>
-                  <p className="text-sm text-muted-foreground">Ingrediente favorito</p>
+                <p className="text-sm font-bold text-foreground capitalize truncate w-full text-center">{stats.topIngredient}</p>
+                <p className="text-xs text-muted-foreground leading-tight">Fav. ingrediente</p>
+              </div>
+            ) : (
+              <div className="bg-card border border-border rounded-2xl p-4 flex flex-col items-center text-center">
+                <div className="bg-muted p-2.5 rounded-xl mb-2">
+                  <TrendingUp className="h-5 w-5 text-muted-foreground" />
                 </div>
+                <p className="text-sm font-bold text-muted-foreground">–</p>
+                <p className="text-xs text-muted-foreground leading-tight">Ingrediente fav.</p>
               </div>
             )}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link href="/escanear" data-testid="card-escanear" className="sm:col-span-2 lg:col-span-2">
-            <div className="group relative bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-2xl p-7 flex flex-col gap-4 h-full cursor-pointer hover:opacity-95 transition-opacity shadow-md shadow-primary/20 overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-8 translate-x-8" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Link href="/escanear" data-testid="card-escanear">
+            <div className="group relative bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-2xl p-6 flex flex-col gap-3 cursor-pointer hover:opacity-95 transition-opacity shadow-md shadow-primary/20 overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-6 translate-x-6" />
               <div className="bg-white/20 p-3 rounded-xl w-fit relative z-10">
-                <Camera className="h-7 w-7" />
+                <Camera className="h-6 w-6" />
               </div>
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-1.5 bg-white/20 text-xs font-semibold px-2.5 py-1 rounded-full mb-2">
+                <div className="inline-flex items-center gap-1.5 bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full mb-2">
                   <Sparkles className="h-3 w-3" />
-                  Nutri-Foto IA
+                  ¡Más popular!
                 </div>
-                <h2 className="text-xl font-serif font-bold">Escanear Ingredientes</h2>
-                <p className="text-primary-foreground/80 text-sm mt-1">
-                  Fotografía tus ingredientes y la IA los detecta automáticamente
+                <h2 className="text-lg font-serif font-bold">Nutri-Foto IA</h2>
+                <p className="text-primary-foreground/80 text-xs mt-1">
+                  Fotografía ingredientes → IA detecta → Receta lista 🎉
                 </p>
-              </div>
-              <div className="mt-auto relative z-10">
-                <span className="text-sm font-semibold bg-white/20 px-3 py-1 rounded-full">Escanear ahora</span>
               </div>
             </div>
           </Link>
 
           <Link href="/generar" data-testid="card-generar">
-            <div className="group bg-card border border-border rounded-2xl p-6 flex flex-col gap-3 h-full cursor-pointer hover:bg-accent/5 transition-colors">
-              <div className="bg-secondary/10 p-3 rounded-xl w-fit">
+            <div className="group bg-gradient-to-br from-secondary/20 to-secondary/10 border border-secondary/30 rounded-2xl p-6 flex flex-col gap-3 cursor-pointer hover:from-secondary/30 hover:to-secondary/20 transition-all">
+              <div className="bg-secondary/20 p-3 rounded-xl w-fit">
                 <Sparkles className="h-6 w-6 text-secondary" />
               </div>
               <div>
                 <h2 className="text-lg font-serif font-bold text-foreground">Generar Receta</h2>
                 <p className="text-muted-foreground text-xs mt-1">
-                  Escribe ingredientes y genera una receta nutritiva
+                  Escribe ingredientes → Receta completa con nutrición 🌟
                 </p>
-              </div>
-              <div className="mt-auto">
-                <span className="text-xs font-semibold text-secondary">Generar &rarr;</span>
               </div>
             </div>
           </Link>
+        </div>
 
+        <div className="grid grid-cols-2 gap-3">
           <Link href="/historial" data-testid="card-historial">
-            <div className="group bg-card border border-border rounded-2xl p-6 flex flex-col gap-3 h-full cursor-pointer hover:bg-accent/5 transition-colors">
-              <div className="bg-primary/10 p-3 rounded-xl w-fit">
-                <History className="h-6 w-6 text-primary" />
+            <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 cursor-pointer hover:bg-accent/5 transition-colors">
+              <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
+                <History className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-lg font-serif font-bold text-foreground">Historial</h2>
-                <p className="text-muted-foreground text-xs mt-1">
-                  Revisa todas tus recetas anteriores
-                </p>
+                <p className="font-semibold text-sm text-foreground">Historial</p>
+                <p className="text-xs text-muted-foreground">Tus recetas</p>
               </div>
-              <div className="mt-auto">
-                <span className="text-xs font-semibold text-primary">Ver historial &rarr;</span>
+            </div>
+          </Link>
+          <Link href="/chef" data-testid="card-chef">
+            <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 cursor-pointer hover:bg-accent/5 transition-colors">
+              <div className="bg-violet-100 p-2.5 rounded-xl shrink-0">
+                <Bot className="h-5 w-5 text-violet-600" />
+              </div>
+              <div>
+                <p className="font-semibold text-sm text-foreground">Chef IA</p>
+                <p className="text-xs text-muted-foreground">Chat nutrición</p>
               </div>
             </div>
           </Link>
         </div>
 
         <div>
-          <h2 className="font-serif font-bold text-xl text-foreground mb-4">Todos los módulos</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="flex items-center gap-2 mb-3">
+            <h2 className="font-serif font-bold text-lg text-foreground">Todos los módulos</h2>
+            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold">{MODULES.length}</span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
             {MODULES.map((mod) => {
               const Icon = mod.icon;
               return (
                 <Link key={mod.href} href={mod.href}>
-                  <div className={`relative overflow-hidden bg-gradient-to-br ${mod.color} rounded-2xl p-4 flex flex-col gap-2 h-full cursor-pointer hover:opacity-90 transition-opacity`}>
-                    <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-6 translate-x-6" />
+                  <div className={`relative overflow-hidden bg-gradient-to-br ${mod.color} rounded-2xl p-4 flex flex-col gap-2 cursor-pointer hover:opacity-90 transition-opacity`}>
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -translate-y-4 translate-x-4" />
                     <div className="bg-white/20 p-2 rounded-lg w-fit relative z-10">
-                      <Icon className={`h-5 w-5 ${mod.textColor}`} />
+                      <Icon className="h-4 w-4 text-white" />
                     </div>
                     <div className="relative z-10">
-                      <p className={`text-sm font-bold ${mod.textColor}`}>{mod.title}</p>
-                      <p className={`text-[11px] ${mod.textColor} opacity-80 mt-0.5 leading-tight`}>{mod.desc}</p>
+                      <p className="text-sm font-bold text-white">{mod.title}</p>
+                      <p className="text-[11px] text-white/75 mt-0.5 leading-tight">{mod.desc}</p>
                     </div>
                   </div>
                 </Link>
@@ -235,23 +234,23 @@ export default function Dashboard() {
         </div>
 
         <Link href="/perfil" data-testid="card-perfil">
-          <div className="group bg-card border border-border rounded-2xl p-5 flex items-center gap-4 cursor-pointer hover:bg-accent/5 transition-colors">
-            <div className="bg-muted p-3 rounded-xl">
-              <User className="h-6 w-6 text-muted-foreground" />
+          <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/5 transition-colors">
+            <div className="bg-gradient-to-br from-primary to-primary/70 text-primary-foreground p-3 rounded-xl shrink-0">
+              <User className="h-5 w-5" />
             </div>
-            <div className="flex-1">
-              <h2 className="font-serif font-bold text-foreground">Mi Perfil</h2>
-              <p className="text-muted-foreground text-sm">
+            <div className="flex-1 min-w-0">
+              <h2 className="font-semibold text-foreground">{user?.nombre || "Mi Perfil"}</h2>
+              <p className="text-muted-foreground text-xs truncate">
                 {user ? `${user.integrantes} integrantes · ${user.ninos} niño(s) · Presupuesto ${user.presupuesto}` : "Cargando..."}
               </p>
             </div>
-            <span className="text-sm text-muted-foreground font-medium">Editar &rarr;</span>
+            <span className="text-xs text-primary font-semibold shrink-0">Editar →</span>
           </div>
         </Link>
 
         <div className="flex justify-end">
-          <Button variant="ghost" size="sm" onClick={handleLogout} data-testid="button-logout" className="text-muted-foreground">
-            <LogOut className="h-4 w-4 mr-2" />
+          <Button variant="ghost" size="sm" onClick={handleLogout} data-testid="button-logout" className="text-muted-foreground hover:text-foreground gap-2">
+            <LogOut className="h-4 w-4" />
             Cerrar sesión
           </Button>
         </div>
