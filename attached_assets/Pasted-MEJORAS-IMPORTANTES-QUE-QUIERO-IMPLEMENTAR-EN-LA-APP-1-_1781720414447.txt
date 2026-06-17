@@ -1,0 +1,202 @@
+MEJORAS IMPORTANTES QUE QUIERO IMPLEMENTAR EN LA APP
+
+1. JUEGO INFINITO CON NIVELES PROGRESIVOS
+
+Actualmente el juego repite siempre los mismos alimentos. Quiero convertirlo en un juego infinito con dificultad progresiva.
+
+Requisitos:
+
+* Cuando el usuario complete un nivel correctamente, debe pasar automáticamente al siguiente nivel.
+* No debe existir un nivel final.
+* Cada nivel debe ser más difícil que el anterior.
+* Generar nuevos alimentos automáticamente desde una base de datos amplia.
+* Incluir alimentos peruanos e internacionales.
+* Aumentar progresivamente:
+
+  * Cantidad de alimentos.
+  * Similitud entre opciones.
+  * Tiempo límite.
+  * Complejidad nutricional.
+
+Ejemplo:
+
+Nivel 1:
+
+* Manzana
+* Plátano
+* Zanahoria
+
+Nivel 5:
+
+* Quinua
+* Avena
+* Yogur griego
+* Atún
+* Palta
+
+Nivel 10:
+
+* Comparar alimentos procesados y naturales.
+* Clasificar macronutrientes.
+* Identificar exceso de azúcar, sodio o grasas.
+
+Nivel 20+:
+
+* Casos clínicos nutricionales.
+* Selección de dietas saludables.
+* Interpretación de etiquetas nutricionales.
+
+El sistema debe generar niveles automáticamente para que nunca termine.
+
+---
+
+2. RETOS INFINITOS
+
+Actualmente los retos terminan.
+
+Quiero que al finalizar todos los retos aparezcan automáticamente nuevos retos.
+
+Requisitos:
+
+* Generar retos ilimitados.
+* Crear nuevos retos cada vez que el usuario completa uno.
+* Sistema de dificultad progresiva.
+* Recompensas mayores en niveles avanzados.
+* Guardar progreso.
+
+Tipos de retos:
+
+* Consumir frutas.
+* Beber agua.
+* Realizar actividad física.
+* Dormir adecuadamente.
+* Reducir bebidas azucaradas.
+* Identificar alimentos saludables.
+* Resolver preguntas nutricionales.
+* Retos semanales.
+* Retos mensuales.
+
+El usuario nunca debe quedarse sin retos.
+
+---
+
+3. MEJORAR NUTRI FOTO (INTELIGENCIA ARTIFICIAL)
+
+Actualmente Nutri Foto falla frecuentemente y muestra errores en el análisis.
+
+Quiero una versión mucho más inteligente.
+
+Requisitos:
+
+A. Reconocimiento de alimentos
+
+* Detectar múltiples alimentos en una sola imagen.
+* Reconocer platos completos.
+* Reconocer alimentos peruanos.
+* Reconocer bebidas.
+* Reconocer snacks.
+* Reconocer postres.
+
+B. Análisis nutricional
+
+* Calorías estimadas.
+* Proteínas.
+* Grasas.
+* Carbohidratos.
+* Azúcar.
+* Sodio.
+* Fibra.
+
+C. Estimación de porciones
+
+* Pequeña.
+* Mediana.
+* Grande.
+
+D. Retroalimentación inteligente
+Ejemplo:
+
+"Se detectó arroz con pollo.
+Porción: mediana.
+Calorías estimadas: 650 kcal.
+Proteínas: 35 g.
+Nivel nutricional: bueno.
+Recomendación: aumentar verduras."
+
+E. Manejo de errores
+
+* Si la IA no está segura, mostrar porcentaje de confianza.
+* Nunca mostrar pantalla en blanco.
+* Nunca bloquear la aplicación.
+* Siempre ofrecer una estimación aproximada.
+
+F. Tecnologías sugeridas
+
+* Google Vision API.
+* Roboflow.
+* TensorFlow.
+* Teachable Machine.
+* OpenAI Vision.
+
+---
+
+4. SISTEMA DE EXPERIENCIA Y RECOMPENSAS
+
+Agregar:
+
+* XP por cada actividad.
+* Niveles de usuario.
+* Insignias.
+* Logros.
+* Monedas virtuales.
+* Ranking.
+
+Ejemplos:
+
+Nutricionista Novato.
+Experto en Alimentación.
+Maestro de los Retos.
+Leyenda Saludable.
+
+---
+
+5. SISTEMA DE MISIONES DIARIAS
+
+Generar automáticamente:
+
+* 3 misiones diarias.
+* 5 misiones semanales.
+* 1 misión especial.
+
+Las misiones deben renovarse automáticamente.
+
+---
+
+6. BASE DE DATOS MÁS GRANDE
+
+Agregar mínimo:
+
+* 500 alimentos.
+* Información nutricional real.
+* Alimentos peruanos.
+* Frutas.
+* Verduras.
+* Cereales.
+* Carnes.
+* Lácteos.
+* Bebidas.
+* Comida rápida.
+
+---
+
+7. OBJETIVO FINAL
+
+Convertir la aplicación en una plataforma educativa de nutrición mucho más inteligente, divertida e infinita, donde:
+
+* El juego nunca termine.
+* Los retos nunca terminen.
+* Los niveles aumenten automáticamente.
+* Nutri Foto analice correctamente las imágenes.
+* Existan recompensas, experiencia y logros.
+* El usuario siempre tenga nuevas actividades para realizar.
+* Toda la experiencia sea dinámica, moderna y motivadora.

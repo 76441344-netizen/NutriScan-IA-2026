@@ -32,6 +32,12 @@ type ScanRecipeExtended = ScanRecipe & {
   proteinas?: string;
   carbohidratos?: string;
   grasas?: string;
+  azucar?: string;
+  sodio?: string;
+  fibra?: string;
+  porcion_estimada?: string;
+  nivel_nutricional?: string;
+  recomendacion_ia?: string;
   recomendacion_ninos?: string;
 };
 
@@ -51,6 +57,7 @@ export default function Scan() {
   const [removedIngredients, setRemovedIngredients] = useState<Set<string>>(new Set());
   const [recipe, setRecipe] = useState<ScanRecipeExtended | null>(null);
   const [newIngredient, setNewIngredient] = useState("");
+  const [analyzeResult, setAnalyzeResult] = useState<{ confidence?: string; plato_completo?: string | null; notas?: string | null } | null>(null);
 
   useEffect(() => {
     if (!userId) setLocation("/");
@@ -90,15 +97,17 @@ export default function Scan() {
         body: JSON.stringify({ userId, imageBase64, mimeType }),
       });
       if (!res.ok) throw new Error("Error al analizar");
-      const data = await res.json() as { ingredients: string[] };
-      if (!data.ingredients || data.ingredients.length === 0) {
-        toast({ title: "Sin ingredientes detectados", description: "No se encontraron alimentos. Intenta con una foto más clara.", variant: "destructive" });
+      const data = await res.json() as { ingredients: string[]; confidence?: string; plato_completo?: string | null; notas?: string | null; error?: boolean };
+      if (data.error || !data.ingredients || data.ingredients.length === 0) {
+        toast({ title: "Sin ingredientes detectados", description: data.notas || "Intenta con una foto más clara y bien iluminada.", variant: "destructive" });
         setStep("upload");
         return;
       }
       setIngredients(data.ingredients);
+      setAnalyzeResult({ confidence: data.confidence, plato_completo: data.plato_completo, notas: data.notas });
       setStep("ingredients");
-      toast({ title: `${data.ingredients.length} ingredientes detectados`, description: "Revisa la lista y elimina los que no sean correctos." });
+      const confLabel = data.confidence === "alta" ? "✅ Alta confianza" : data.confidence === "media" ? "⚠️ Confianza media" : "🔍 Estimación";
+      toast({ title: `${data.ingredients.length} ingredientes detectados`, description: `${confLabel}${data.plato_completo ? ` · ${data.plato_completo}` : ""}` });
     } catch {
       toast({ title: "Error", description: "No se pudo analizar la imagen. Inténtalo de nuevo.", variant: "destructive" });
       setStep("upload");
@@ -130,7 +139,7 @@ export default function Scan() {
       const res = await fetch("/api/scans/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, ingredients: activeIngredients, imageBase64, mimeType }),
+        body: JSON.stringify({ userId, ingredients: activeIngredients, imageBase64, mimeType, plato_completo: analyzeResult?.plato_completo }),
       });
       if (!res.ok) throw new Error("Error al generar");
       const data = await res.json() as ScanRecipeExtended;
@@ -418,11 +427,29 @@ export default function Scan() {
 
             {(recipe.calorias || recipe.proteinas || recipe.carbohidratos || recipe.grasas) && (
               <div className="bg-muted/40 rounded-2xl p-4">
-                <h3 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
-                  <BarChart3 className="h-4 w-4 text-primary" />
-                  Información nutricional por porción
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm">
+                    <BarChart3 className="h-4 w-4 text-primary" />
+                    Información nutricional por porción
+                  </h3>
+                  {(recipe as ScanRecipeExtended).porcion_estimada && (
+                    <span className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full font-medium">
+                      Porción: {(recipe as ScanRecipeExtended).porcion_estimada}
+                    </span>
+                  )}
+                </div>
+                {(recipe as ScanRecipeExtended).nivel_nutricional && (
+                  <div className={`mb-3 text-xs px-3 py-2 rounded-xl font-medium flex items-center gap-2 ${
+                    (recipe as ScanRecipeExtended).nivel_nutricional === "excelente" ? "bg-green-100 text-green-800" :
+                    (recipe as ScanRecipeExtended).nivel_nutricional === "bueno" ? "bg-blue-100 text-blue-800" :
+                    (recipe as ScanRecipeExtended).nivel_nutricional === "regular" ? "bg-amber-100 text-amber-800" :
+                    "bg-red-100 text-red-800"
+                  }`}>
+                    <span>{(recipe as ScanRecipeExtended).nivel_nutricional === "excelente" ? "🌟" : (recipe as ScanRecipeExtended).nivel_nutricional === "bueno" ? "✅" : (recipe as ScanRecipeExtended).nivel_nutricional === "regular" ? "⚠️" : "🔴"}</span>
+                    Nivel nutricional: <strong className="capitalize">{(recipe as ScanRecipeExtended).nivel_nutricional}</strong>
+                  </div>
+                )}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
                   {recipe.calorias && (
                     <div className="bg-orange-50 border border-orange-100 rounded-xl p-3 text-center">
                       <Flame className="h-4 w-4 text-orange-500 mx-auto mb-1" />
@@ -452,6 +479,33 @@ export default function Scan() {
                     </div>
                   )}
                 </div>
+                {((recipe as ScanRecipeExtended).azucar || (recipe as ScanRecipeExtended).sodio || (recipe as ScanRecipeExtended).fibra) && (
+                  <div className="grid grid-cols-3 gap-2">
+                    {(recipe as ScanRecipeExtended).azucar && (
+                      <div className="bg-pink-50 border border-pink-100 rounded-xl p-2.5 text-center">
+                        <p className="text-sm font-bold text-pink-700">{(recipe as ScanRecipeExtended).azucar}</p>
+                        <p className="text-[10px] text-pink-600">🍬 Azúcar</p>
+                      </div>
+                    )}
+                    {(recipe as ScanRecipeExtended).sodio && (
+                      <div className="bg-teal-50 border border-teal-100 rounded-xl p-2.5 text-center">
+                        <p className="text-sm font-bold text-teal-700">{(recipe as ScanRecipeExtended).sodio}</p>
+                        <p className="text-[10px] text-teal-600">🧂 Sodio</p>
+                      </div>
+                    )}
+                    {(recipe as ScanRecipeExtended).fibra && (
+                      <div className="bg-lime-50 border border-lime-100 rounded-xl p-2.5 text-center">
+                        <p className="text-sm font-bold text-lime-700">{(recipe as ScanRecipeExtended).fibra}</p>
+                        <p className="text-[10px] text-lime-600">🌿 Fibra</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {(recipe as ScanRecipeExtended).recomendacion_ia && (
+                  <div className="mt-3 bg-primary/5 border border-primary/20 rounded-xl px-3 py-2.5 text-sm text-primary">
+                    <span className="font-semibold">💡 Recomendación IA:</span> {(recipe as ScanRecipeExtended).recomendacion_ia}
+                  </div>
+                )}
               </div>
             )}
 

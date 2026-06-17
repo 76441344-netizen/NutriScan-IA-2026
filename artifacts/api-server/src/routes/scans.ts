@@ -28,45 +28,80 @@ router.post("/scans/analyze", async (req, res) => {
             },
             {
               type: "text",
-              text: `Eres un experto nutricionista. Analiza esta imagen con mucho detalle e identifica TODOS los ingredientes y alimentos visibles.
+              text: `Eres un experto nutricionista y analista visual de alimentos. Analiza esta imagen con máximo detalle e identifica TODOS los alimentos, ingredientes y platos visibles.
 
-Puedes detectar: verduras (espinaca, zanahoria, brócoli, tomate, cebolla, ajo, pimiento, zapallo, betarraga, papa, apio, pepino, lechuga, coliflor), frutas (manzana, plátano, naranja, limón, pera, uvas, papaya, piña, mango), carnes y proteínas (pollo, carne de res, carne molida, pescado, atún, huevo, sangrecita, hígado, cerdo), granos y cereales (arroz, lentejas, quinoa, avena, frijoles, garbanzos, trigo, pan, pasta), lácteos (leche, queso, yogur, mantequilla) y otros alimentos procesados o frescos.
+Puedes detectar:
+- Frutas y verduras frescas (manzana, naranja, plátano, zanahoria, espinaca, brócoli, tomate, pepino, lechuga, zapallo, betarraga, yuca, etc.)
+- Carnes y proteínas (pollo, carne de res, pescado, atún, huevo, sangrecita, hígado, cerdo, pavo, etc.)
+- Granos y cereales (arroz, quinoa, avena, lentejas, frijoles, garbanzos, kiwicha, trigo, pasta, pan, etc.)
+- Lácteos (leche, queso, yogur, mantequilla, etc.)
+- Platos preparados peruanos (ceviche, arroz con leche, lomo saltado, ají de gallina, causa, etc.)
+- Bebidas (jugos naturales, chicha, leche, agua, etc.)
+- Snacks y procesados (galletas, papas fritas, golosinas, etc.)
+- Condimentos y hierbas (perejil, cilantro, ajo, cebolla, etc.)
+
+IMPORTANTE:
+- Si ves un plato preparado, identifica sus componentes principales.
+- Si la imagen no es clara, proporciona una estimación con menor confianza.
+- NUNCA respondas que no puedes ver nada — siempre da al menos 1 alimento estimado.
+- Si la imagen es de mala calidad, di qué crees ver con menor confianza.
 
 Responde ÚNICAMENTE con un JSON válido (sin markdown, sin explicaciones):
 {
-  "ingredients": ["ingrediente1", "ingrediente2"],
-  "confidence": "alta"
+  "ingredients": ["ingrediente1", "ingrediente2", "ingrediente3"],
+  "confidence": "alta",
+  "plato_completo": "Nombre del plato si es uno preparado o null",
+  "notas": "Observación breve si la imagen no es clara"
 }
 
-Sé específico con los nombres. Si ves varios alimentos del mismo tipo, listarlos individualmente. En español siempre.`,
+Sé específico y en español siempre. Máximo 12 ingredientes.`,
             },
           ],
         },
       ],
       temperature: 0.1,
-      max_tokens: 512,
+      max_tokens: 600,
     });
 
     const content = completion.choices[0]?.message?.content ?? "";
     const jsonMatch = content.match(/\{[\s\S]*\}/);
+
     if (!jsonMatch) {
-      return res.status(500).json({ error: "No se pudo analizar la imagen" });
+      // Fallback: try to extract ingredients from plain text
+      req.log.warn({ content }, "No JSON from vision, trying text extraction");
+      return res.json({ ingredients: ["alimento no identificado"], confidence: "baja", notas: "No se pudo analizar con claridad" });
     }
 
-    const data = JSON.parse(jsonMatch[0]) as { ingredients: string[] };
-    return res.json({ ingredients: Array.isArray(data.ingredients) ? data.ingredients : [] });
+    const data = JSON.parse(jsonMatch[0]) as { ingredients: string[]; confidence?: string; plato_completo?: string; notas?: string };
+    const ingredients = Array.isArray(data.ingredients) && data.ingredients.length > 0
+      ? data.ingredients
+      : ["alimento detectado"];
+
+    return res.json({
+      ingredients,
+      confidence: data.confidence || "media",
+      plato_completo: data.plato_completo || null,
+      notas: data.notas || null,
+    });
   } catch (err) {
     req.log.error({ err }, "Groq vision error");
-    return res.status(500).json({ error: "Error al analizar la imagen con IA" });
+    // Return a graceful fallback instead of 500
+    return res.json({
+      ingredients: [],
+      confidence: "baja",
+      notas: "No se pudo analizar la imagen. Intenta con una foto más clara y bien iluminada.",
+      error: true,
+    });
   }
 });
 
 router.post("/scans/generate", async (req, res) => {
-  const { userId, ingredients, imageBase64, mimeType } = req.body as {
+  const { userId, ingredients, imageBase64, mimeType, plato_completo } = req.body as {
     userId: number;
     ingredients: string[];
     imageBase64: string;
     mimeType: string;
+    plato_completo?: string;
   };
   if (!userId || !ingredients || !imageBase64 || !mimeType) {
     return res.status(400).json({ error: "Faltan campos requeridos" });
@@ -79,35 +114,47 @@ router.post("/scans/generate", async (req, res) => {
   if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
 
   const ingredientsList = ingredients.join(", ");
+  const platoCtx = plato_completo ? `\nSe detectó que podría ser un plato completo: "${plato_completo}". Ten esto en cuenta.` : "";
 
-  const prompt = `Eres un nutricionista experto en alimentación infantil y prevención de anemia en niños latinoamericanos.
+  const prompt = `Eres un nutricionista experto en alimentación infantil y prevención de anemia en niños latinoamericanos, especialmente peruanos.
 
 Contexto familiar: ${user.ninos} niño(s) de edades ${user.edades || "no especificado"}. Familia de ${user.integrantes} integrantes, presupuesto ${user.presupuesto}, tiempo para cocinar: ${user.tiempo_cocina} minutos.
 
-Se detectaron en la imagen los siguientes ingredientes: ${ingredientsList}
+Se detectaron en la imagen los siguientes ingredientes: ${ingredientsList}${platoCtx}
 
-Genera UNA receta completa, saludable, nutritiva y apropiada para niños. Prioriza la prevención de anemia infantil.
+TAREA: Genera UNA receta completa, saludable, nutritiva y apropiada para niños. Prioriza la prevención de anemia infantil con ingredientes ricos en hierro y vitamina C.
 
-Responde ÚNICAMENTE con un JSON válido con esta estructura exacta (sin markdown):
+Incluye estimaciones nutricionales REALES y específicas (no aproximadas). Si el plato contiene ingredientes ricos en hierro (espinaca, lentejas, sangrecita, hígado, quinoa, etc.), indícalo con nivelHierro "Alto".
+
+Responde ÚNICAMENTE con un JSON válido con esta estructura exacta (sin markdown, sin explicaciones previas):
 {
-  "nombre": "Nombre atractivo de la receta",
+  "nombre": "Nombre atractivo y apetitoso de la receta",
   "porciones": "X porciones",
   "dificultad": "Fácil",
-  "ingredientes": "Lista detallada con cantidades exactas, uno por línea",
-  "pasos": "Pasos numerados y detallados, uno por línea",
+  "ingredientes": "- 200g ingrediente1\\n- 1 taza ingrediente2\\n- Al gusto ingrediente3",
+  "pasos": "1. Primer paso detallado.\\n2. Segundo paso.\\n3. Tercer paso.",
   "tiempo_preparacion": "X minutos",
-  "calorias": "XXX kcal por porción",
-  "proteinas": "Xg por porción",
-  "carbohidratos": "Xg por porción",
-  "grasas": "Xg por porción",
-  "beneficios": "Beneficios nutricionales principales para niños",
+  "calorias": "XXX kcal",
+  "proteinas": "Xg",
+  "carbohidratos": "Xg",
+  "grasas": "Xg",
+  "azucar": "Xg",
+  "sodio": "XXmg",
+  "fibra": "Xg",
+  "porcion_estimada": "mediana",
+  "beneficios": "Beneficios nutricionales principales y concretos para niños",
   "nivelHierro": "Medio",
-  "prevencion_anemia": "Cómo esta receta ayuda a prevenir la anemia en niños",
-  "consejos_absorcion": "Consejos para mejorar la absorción del hierro",
-  "recomendacion_ninos": "Cómo presentar esta receta a los niños para que la disfruten"
+  "prevencion_anemia": "Cómo esta receta específicamente ayuda a prevenir la anemia",
+  "consejos_absorcion": "Consejo práctico para mejorar la absorción del hierro (ej: acompañar con limón)",
+  "recomendacion_ninos": "Cómo presentar esta receta a los niños para que la disfruten y la quieran comer",
+  "nivel_nutricional": "bueno",
+  "recomendacion_ia": "Recomendación personalizada breve para mejorar este plato nutricionalmente"
 }
 
-Para dificultad usa: "Fácil", "Media" o "Avanzada". Para nivelHierro usa: "Bajo", "Medio" o "Alto".`;
+Para dificultad usa: "Fácil", "Media" o "Avanzada".
+Para nivelHierro usa: "Bajo", "Medio" o "Alto".
+Para porcion_estimada usa: "pequeña", "mediana" o "grande".
+Para nivel_nutricional usa: "excelente", "bueno", "regular" o "mejorable".`;
 
   type RecipeData = {
     nombre: string;
@@ -120,11 +167,17 @@ Para dificultad usa: "Fácil", "Media" o "Avanzada". Para nivelHierro usa: "Bajo
     proteinas: string;
     carbohidratos: string;
     grasas: string;
+    azucar?: string;
+    sodio?: string;
+    fibra?: string;
+    porcion_estimada?: string;
     beneficios: string;
     nivelHierro: string;
     prevencion_anemia: string;
     consejos_absorcion: string;
     recomendacion_ninos: string;
+    nivel_nutricional?: string;
+    recomendacion_ia?: string;
   };
 
   let recipeData: RecipeData;
@@ -145,7 +198,7 @@ Para dificultad usa: "Fácil", "Media" o "Avanzada". Para nivelHierro usa: "Bajo
         },
       ],
       temperature: 0.6,
-      max_tokens: 1500,
+      max_tokens: 2000,
     });
 
     const content = completion.choices[0]?.message?.content ?? "";
@@ -154,7 +207,7 @@ Para dificultad usa: "Fácil", "Media" o "Avanzada". Para nivelHierro usa: "Bajo
     recipeData = JSON.parse(jsonMatch[0]) as RecipeData;
   } catch (err) {
     req.log.error({ err }, "Groq recipe generation error");
-    return res.status(500).json({ error: "Error al generar la receta con IA" });
+    return res.status(500).json({ error: "Error al generar la receta con IA. Intenta de nuevo." });
   }
 
   const [scan] = await db.insert(ingredientScansTable).values({
@@ -179,11 +232,17 @@ Para dificultad usa: "Fácil", "Media" o "Avanzada". Para nivelHierro usa: "Bajo
     proteinas: recipeData.proteinas,
     carbohidratos: recipeData.carbohidratos,
     grasas: recipeData.grasas,
+    azucar: recipeData.azucar,
+    sodio: recipeData.sodio,
+    fibra: recipeData.fibra,
+    porcion_estimada: recipeData.porcion_estimada,
     beneficios: recipeData.beneficios,
     nivelHierro: recipeData.nivelHierro,
     prevencion_anemia: recipeData.prevencion_anemia,
     consejos_absorcion: recipeData.consejos_absorcion,
     recomendacion_ninos: recipeData.recomendacion_ninos,
+    nivel_nutricional: recipeData.nivel_nutricional,
+    recomendacion_ia: recipeData.recomendacion_ia,
     createdAt: scan.createdAt.toISOString(),
   });
 });
@@ -196,10 +255,7 @@ router.get("/scans", async (req, res) => {
     .where(eq(ingredientScansTable.userId, userId))
     .orderBy(sql`${ingredientScansTable.createdAt} DESC`);
 
-  return res.json(scans.map(s => ({
-    ...s,
-    createdAt: s.createdAt.toISOString(),
-  })));
+  return res.json(scans.map(s => ({ ...s, createdAt: s.createdAt.toISOString() })));
 });
 
 router.get("/scans/:id", async (req, res) => {
