@@ -1,0 +1,413 @@
+¡Excelente! Aquí tienes un **Prompt Único y Completo** que integra **TODAS** tus solicitudes: diseño infantil, animaciones, juego, planner semanal ilimitado, retos familiares, panel de impacto y análisis de imágenes. Está estructurado para que el asistente de IA te entregue un código completo y funcional.
+
+---
+
+# PROMPT COMPLETO - NUTRISCAN IA 2026 (VERSIÓN INTEGRAL)
+
+```
+ACTÚA COMO UN EXPERTO EN DESARROLLO FULL-STACK, DISEÑO UI/UX INFANTIL, VISIÓN POR COMPUTADORA E INGENIERÍA DE IA.
+
+Mi aplicación "NutriScan IA 2026" en Replit (https://replit.com/@76441344/NutriScan-IA-2026) necesita una transformación COMPLETA para convertirse en una aplicación profesional de nutrición infantil dirigida a madres de familia.
+
+**IMPORTANTE: NO CAMBIAR LA LÓGICA DEL CHAT EXISTENTE. SOLO MEJORAR EL DISEÑO VISUAL Y AGREGAR NUEVAS FUNCIONALIDADES.**
+
+---
+
+## PARTE 1: DISEÑO GENERAL Y PALETA DE COLORES
+
+### PALETA DE COLORES PRINCIPAL:
+- Fondo principal: #FFFDF7 (crema suave)
+- Verde principal: #4F7F3D
+- Verde suave: #E8F5E9
+- Amarillo suave: #FFF3CD
+- Naranja suave: #FFB74D
+- Azul: #4F46E5
+- Morado: #A855F7
+
+### ESTILOS GLOBALES:
+- Bordes redondeados: 20px
+- Sombras suaves: box-shadow: 0 8px 30px rgba(0,0,0,0.08)
+- Espaciado amplio: padding: 24px, margin: 16px
+- Diseño 100% responsive
+- Transiciones suaves: transition: all 0.3s ease
+- Fuentes: usar 'Baloo 2' y 'Nunito' de Google Fonts
+
+---
+
+## PARTE 2: SECCIÓN SUPERIOR - CONSEJO NUTRICIONAL
+
+Agregar una tarjeta fija ARRIBA del chat:
+
+**DISEÑO:**
+- Fondo: amarillo suave (#FFF3CD)
+- Icono grande: 💡
+- Título: "Consejo Nutricional del Día"
+- Contenido: "Combina lentejas con limón para mejorar la absorción del hierro."
+- Sombra elegante y bordes redondeados (20px)
+- Animación de aparición suave
+
+**CÓDIGO REQUERIDO:** HTML + CSS con animación de fade-in.
+
+---
+
+## PARTE 3: RECOMENDACIONES PARA MAMÁS
+
+Agregar DEBAJO del consejo, 4 tarjetas:
+
+**TARJETAS:**
+1. 🥩 Hierro
+2. 🍊 Vitamina C
+3. 🥚 Proteínas
+4. 🥬 Verduras
+
+**REQUISITOS:**
+- Icono grande (40px)
+- Color atractivo (verde suave)
+- Hover effect: scale(1.05) + sombra más pronunciada
+- Animación suave al cargar (staggered fade-in)
+- Al hacer clic: enviar mensaje al chat con el tema seleccionado
+
+---
+
+## PARTE 4: MEJORA DEL CHAT
+
+### MENSAJES DEL USUARIO:
+- Fondo: verde principal (#4F7F3D)
+- Texto: blanco
+- Bordes: redondeados (16px)
+- Sombra: suave
+- Alineación: derecha
+
+### MENSAJES DE LA IA:
+- Fondo: blanco
+- Tarjeta moderna con sombra
+- Separación entre párrafos: 12px
+- Tipografía: 'Nunito', 16px
+- Alineación: izquierda
+
+### TRANSFORMACIÓN DE LISTAS:
+- Detectar automáticamente listas en respuestas de IA
+- Convertir en tarjetas visuales con iconos
+- Ejemplo:
+  ```
+  🥩 Alimentos ricos en hierro
+  [Tarjeta] Carne roja - Excelente fuente de hierro
+  [Tarjeta] Lentejas - Hierro vegetal saludable
+  [Tarjeta] Espinaca - Ideal para niños
+  ```
+
+### PREGUNTAS RÁPIDAS (CHIPS):
+Rediseñar botones de sugerencias como chips modernos:
+
+**CHIPS:**
+🥩 Hierro | 🍲 Recetas | 👶 Alimentación | 📅 Menú Semanal | 🍎 Frutas | 🥬 Verduras
+
+**ESTILO:**
+- Fondo: verde suave (#E8F5E9)
+- Texto: verde principal
+- Border-radius: 50px
+- Hover: fondo verde principal, texto blanco
+- Transición: 0.3s
+
+---
+
+## PARTE 5: PLANNER SEMANAL (MEJORA CRÍTICA)
+
+### ELIMINAR LIMITACIÓN ACTUAL:
+- Permitir generar planes semanales de forma ILIMITADA
+- Cada clic en "Generar con IA" crea un nuevo menú completo
+- Si ya existe un plan: mostrar modal:
+  ```
+  "¿Deseas reemplazar el plan actual?"
+  [Reemplazar] [Cancelar]
+  ```
+
+### OBJETIVO NUTRICIONAL SEMANAL (OBLIGATORIO):
+Antes de generar, mostrar selector:
+
+**TÍTULO:** "¿Cuál es tu objetivo nutricional esta semana?"
+
+**OPCIONES:**
+- Alimentación equilibrada
+- Reducir anemia
+- Aumentar hierro
+- Ganar peso saludable
+- Bajar de peso saludable
+- Aumentar proteínas
+- Mejorar digestión
+- Más frutas y verduras
+- Alimentación infantil
+- Adulto mayor
+- Embarazo
+- Lactancia
+- Control de azúcar
+- Salud cardiovascular
+- Energía para estudiar
+- Energía para trabajar
+- Rendimiento deportivo
+
+### INTERFAZ DEL PLANNER:
+- Mostrar el objetivo seleccionado encima del planner
+- Mensaje de carga: "Generando plan personalizado..."
+- Mantener diseño actual de tarjetas
+- Adaptar todo el menú según objetivo seleccionado
+
+---
+
+## PARTE 6: JUEGO DINÁMICO "ROMPECABEZAS SALUDABLE"
+
+### MECÁNICA DEL JUEGO:
+- Tablero con 6 alimentos mezclados (3 saludables, 3 no saludables)
+- Arrastrar a canasta verde (saludable) o roja (no saludable)
+- Retroalimentación inmediata:
+  - ✅ Correcto: animación celebración + sonido alegre
+  - ❌ Incorrecto: shake + explicación educativa
+
+### VARIEDAD DIARIA:
+- Base de datos de 365+ combinaciones (una por día del año)
+- Selección automática basada en fecha
+- Archivo JSON con: nombre, categoría, emoji, dato curioso
+
+### PUNTUACIÓN:
+- Sistema de puntos y racha de aciertos
+- Estrellas al finalizar
+- Guardar progreso en localStorage
+
+### CÓDIGO REQUERIDO:
+- HTML/CSS para tablero
+- JavaScript para drag & drop, lógica y rotación diaria
+- Sistema de almacenamiento local
+
+---
+
+## PARTE 7: RETOS FAMILIARES (NUEVOS)
+
+Agregar dos nuevos retos al módulo existente:
+
+### RETO 1: Cena Sin Pantallas
+- Título: "Cena Sin Pantallas"
+- Descripción: "Comparte la cena en familia sin celulares, televisión ni tablets durante 5 días."
+- Duración: 5 días
+- Meta: 5 registros
+- Puntos: 75 pts
+- Botón: "Registrar cena completada"
+- Cada clic suma 1 progreso
+- Al llegar a 5: marcar completado, otorgar 75 puntos
+
+### RETO 2: Cero Desperdicio
+- Título: "Cero Desperdicio"
+- Descripción: "Evita desperdiciar alimentos y aprovecha los ingredientes durante 7 días."
+- Duración: 7 días
+- Meta: 7 registros
+- Puntos: 100 pts
+- Botón: "Hoy no desperdiciamos comida"
+- Cada clic suma 1 progreso
+- Al llegar a 7: marcar completado, otorgar 100 puntos
+
+### REQUISITOS TÉCNICOS:
+- Mantener diseño actual de tarjetas
+- Barra de progreso visual
+- Guardar avance por usuario (localStorage)
+- Evitar registrar después de completado
+- Toasts: "¡Progreso registrado!" y "¡Reto completado! Has ganado puntos"
+
+---
+
+## PARTE 8: PANEL DE IMPACTO (REDISEÑO COMPLETO)
+
+**CONVERTIR EN DASHBOARD MODERNO Y PROFESIONAL**
+
+### ENCABEZADO:
+```
+🏆 Tu Progreso Nutricional Familiar
+"Observa cómo tu familia mejora sus hábitos alimenticios día a día."
+```
+- Fondo con gradiente atractivo
+- Diseño tipo dashboard premium
+
+### TARJETAS DE MÉTRICAS (Rediseñadas):
+Cada tarjeta debe incluir:
+- Icono grande y colorido
+- Número principal destacado (2rem, bold)
+- Descripción clara
+- Animación al hover (scale + sombra)
+- Colores variados
+
+**MÉTRICAS ACTUALES (MANTENER):**
+- 🍲 Recetas Generadas
+- 🎯 Recetas Anti-Anemia
+- 🏆 Retos Completados
+- ⭐ Puntos Ganados
+- ⚡ Actividad del Mes
+- 🛒 Compras Completadas
+- 👨‍👩‍👧‍👦 Integrantes de la Familia
+
+### NUEVA TARJETA: NIVEL DE SALUD FAMILIAR
+```
+🏆 Nivel Familiar
+- Puntaje bajo: 🥉 Principiante
+- Puntaje medio: 🥈 Saludable
+- Puntaje alto: 🥇 Experto
+```
+- Mostrar medalla visual grande
+- Animación de brillo
+
+### BARRA DE PROGRESO:
+- Puntaje actual / Meta siguiente
+- Porcentaje completado
+- Animación suave de carga
+- Ejemplo: "10/100 puntos - Meta siguiente: 25 puntos"
+
+### SECCIÓN: LOGROS DESBLOQUEADOS
+```
+🏅 Logros Desbloqueados
+✅ Primera receta creada
+✅ Primera consulta al Chef IA
+🔒 Completar 5 recetas
+🔒 Crear menú semanal
+🔒 Completar reto familiar
+```
+- Tarjetas visuales con iconos
+- Bloqueados: gris con candado
+
+### RESUMEN FAMILIAR:
+```
+👨‍👩‍👧‍👦 Resumen Familiar
+- Integrantes: X
+- Recetas creadas: X
+- Consultas realizadas: X
+- Retos completados: X
+- Nivel actual: X
+```
+
+### MENSAJE MOTIVACIONAL:
+```
+🌟 ¡Excelente trabajo!
+Tu familia ya está construyendo hábitos alimenticios más saludables.
+Sigue avanzando para desbloquear nuevos logros.
+```
+- Fondo con gradiente atractivo (verde a azul)
+
+### ACTIVIDAD MENSUAL:
+```
+📅 Actividad de este mes
+- 🍲 Recetas generadas: X
+- 🤖 Consultas al Chef IA: X
+- 🏆 Retos completados: X
+- 🛒 Compras realizadas: X
+```
+- Barras de progreso horizontales
+
+### ANIMACIONES EN PANEL:
+- Fade In al cargar
+- Hover Scale (1.03)
+- Elevación de tarjetas
+- Transiciones: 300ms
+
+---
+
+## PARTE 9: SISTEMA DE ANÁLISIS DE IMÁGENES (NUTRIFOTO)
+
+### PREPROCESAMIENTO AVANZADO (Python/OpenCV):
+- Ecualización de histograma adaptativo (CLAHE)
+- Filtro bilateral para reducir ruido
+- Enfoque inteligente (sharpening)
+- Detección de bordes para aislar alimento
+- Corrección de perspectiva
+
+### MODELO DE IA:
+- Opción A: Google Cloud Vision API
+- Opción B: Hugging Face (microsoft/resnet-50)
+- Opción C: OpenAI GPT-4o con visión
+- Si confianza < 70%: pedir confirmación al usuario
+
+### GENERACIÓN DE RECETAS:
+Prompt estructurado:
+"Eres un chef nutricionista infantil. Crea recetas divertidas, coloridas y fáciles para niños, usando los ingredientes detectados. Incluye: nombre creativo, ingredientes con cantidades, instrucciones paso a paso, tiempo de preparación, valor nutricional aproximado y un dato curioso sobre algún ingrediente."
+
+---
+
+## PARTE 10: ANIMACIONES Y ELEMENTOS INTERACTIVOS
+
+### MASCOTA "NUTRIAMIGO":
+- Un brócoli o fruta con ojos y sonrisa
+- Animaciones: saludo, felicidad, celebración
+- Movimiento flotante suave (keyframes CSS)
+- Cambia de expresión según acción
+
+### EFECTOS GLOBALES:
+- Hover scale en todas las tarjetas
+- Fade in en elementos al cargar
+- Elevación de tarjetas
+- Transición 300ms en todo
+- Confeti en logros completados
+
+### SONIDOS (Web Audio API):
+- Sonido alegre para aciertos
+- Sonido de error para fallos
+- Sonido de celebración para retos completados
+
+---
+
+## PARTE 11: ESTRUCTURA DE ARCHIVOS (ENTREGA ESPERADA)
+
+```
+/NutriScan-IA-2026
+├── /backend
+│   ├── app.py (Flask/FastAPI)
+│   ├── vision_processor.py
+│   └── recipe_generator.py
+├── /frontend
+│   ├── index.html
+│   ├── style.css (CON TODOS LOS ESTILOS)
+│   ├── script.js (CON TODAS LAS FUNCIONALIDADES)
+│   └── /assets
+│       ├── /images
+│       └── /sounds
+├── /data
+│   ├── alimentos_diarios.json (365+ alimentos)
+│   └── retos_familiares.json
+├── .env (variables de entorno)
+└── requirements.txt
+```
+
+---
+
+## PARTE 12: INSTRUCCIONES FINALES
+
+**ENTREGA ESPERADA:**
+1. Código completo de frontend (HTML, CSS, JavaScript) con todas las mejoras visuales
+2. Código completo de backend (Python) con análisis de imágenes
+3. Archivos JSON con datos de alimentos y retos
+4. Instrucciones detalladas de instalación
+5. Guía de configuración de variables de entorno
+6. Explicación de cómo se integran todos los componentes
+
+**CONSIDERACIONES TÉCNICAS:**
+- Usar Flask o FastAPI para backend
+- Utilizar Flask-CORS
+- Implementar caché para respuestas de IA
+- Diseño 100% responsive
+- Optimizar imágenes
+- Guardar progreso en localStorage
+
+**RESULTADO FINAL:**
+Chef IA debe verse como una aplicación profesional de nutrición infantil, moderna, atractiva, interactiva y educativa. Debe transmitir confianza, modernidad y facilidad de uso para madres de familia, manteniendo TODAS las funciones actuales y agregando las nuevas funcionalidades solicitadas.
+
+**PRIORIZAR:**
+- Soluciones gratuitas o de bajo costo
+- Código fácil de mantener y escalar
+- Experiencia de usuario fluida y atractiva
+- Rendimiento óptimo en Replit
+```
+
+---
+
+## 📌 **INSTRUCCIONES DE USO**
+
+1. **Copia todo el prompt** desde "ACTÚA COMO UN EXPERTO..." hasta el final.
+2. **Pégalo** en tu asistente de IA favorito (ChatGPT, Claude, Gemini).
+3. **Especifica** que necesitas el código completo para Replit.
+4. Cuando recibas el código, **pruébalo en tu Replit** y si encuentras errores, compárteme los mensajes de error exactos para ayudarte a depurarlos.
+
+Este prompt es **tan detallado y completo** que el asistente de IA entenderá exactamente lo que necesitas y te entregará una solución casi lista para usar. ¡Buena suerte con tu aplicación! 🍎👩‍🍳🌟

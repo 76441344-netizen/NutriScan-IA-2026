@@ -21,6 +21,7 @@ import Comunidad from "@/pages/comunidad";
 import Aprende from "@/pages/aprende";
 import Biohuerto from "@/pages/biohuerto";
 import Impacto from "@/pages/impacto";
+import NutriJuego from "@/pages/nutrijuego";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ function Router() {
         <Route path="/aprende" component={Aprende} />
         <Route path="/biohuerto" component={Biohuerto} />
         <Route path="/impacto" component={Impacto} />
+        <Route path="/nutrijuego" component={NutriJuego} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

@@ -17,6 +17,7 @@ const MODULES = [
   { href: "/aprende", icon: BookOpen, title: "Aprende", desc: "Biblioteca de nutrición", color: "from-teal-500 to-emerald-600" },
   { href: "/biohuerto", icon: Leaf, title: "Biohuerto", desc: "Cultiva tus alimentos", color: "from-lime-500 to-green-600" },
   { href: "/impacto", icon: TrendingUp, title: "Panel de Impacto", desc: "Tu huella nutricional", color: "from-indigo-500 to-blue-600" },
+  { href: "/nutrijuego", icon: Sparkles, title: "NutriJuego", desc: "¿Saludable o no? ¡Juega!", color: "from-green-500 to-emerald-600" },
 ];
 
 const MOTIVATIONAL_MESSAGES = [
