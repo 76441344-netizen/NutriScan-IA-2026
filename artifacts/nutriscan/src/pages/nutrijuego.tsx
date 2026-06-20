@@ -139,6 +139,11 @@ export default function NutriJuego() {
   const [roundCorrect, setRoundCorrect] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Refs para que los callbacks siempre lean los valores más recientes sin cierre obsoleto
+  const clasificadosRef = useRef<Record<string, boolean | null>>({});
+  const rachaRef = useRef(0);
+  const alimentosRef = useRef<Alimento[]>([]);
+  const phaseRef = useRef<Phase>("menu");
 
   const storageKey = `nutrijuego_${userId}`;
 
@@ -155,6 +160,21 @@ export default function NutriJuego() {
 
   const cfg = getLevelConfig(level);
 
+  const finishRound = useCallback((timeOut = false) => {
+    if (phaseRef.current !== "playing") return; // evitar doble disparo
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+    // Leer ref — siempre tiene el estado más actualizado
+    const correct = Object.values(clasificadosRef.current).filter(Boolean).length;
+    setRoundCorrect(correct);
+    setPhase("roundResult");
+    phaseRef.current = "roundResult";
+    if (timeOut) toast({ title: "⏱️ ¡Tiempo agotado!", description: `Respondiste ${correct} correctamente.` });
+  }, [toast]);
+
+  // Ref estable para el timer — evita que el efecto capture una versión obsoleta
+  const finishRoundRef = useRef(finishRound);
+  useEffect(() => { finishRoundRef.current = finishRound; }, [finishRound]);
+
   // Timer
   useEffect(() => {
     if (phase !== "playing" || cfg.timeLimit === 0) return;
@@ -163,55 +183,60 @@ export default function NutriJuego() {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timerRef.current!);
-          finishRound(true);
+          timerRef.current = null;
+          finishRoundRef.current(true);
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [phase, level]);
-
-  const finishRound = useCallback((timeOut = false) => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    const correct = Object.values(clasificados).filter(Boolean).length;
-    setRoundCorrect(correct);
-    setPhase("roundResult");
-    if (timeOut) toast({ title: "⏱️ ¡Tiempo agotado!", description: `Respondiste ${correct} correctamente.` });
-  }, [clasificados]);
+    return () => { if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; } };
+  }, [phase, level, cfg.timeLimit]);
 
   const startLevel = (lvl: number) => {
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+    if (feedbackTimeoutRef.current) { clearTimeout(feedbackTimeoutRef.current); feedbackTimeoutRef.current = null; }
     const config = getLevelConfig(lvl);
     const foods = selectFoodsForLevel(lvl, config);
+    clasificadosRef.current = {};
+    rachaRef.current = 0;
+    alimentosRef.current = foods;
     setLevel(lvl);
     setAlimentos(foods);
     setClasificados({});
     setFeedback(null);
     setRacha(0);
     setPhase("playing");
+    phaseRef.current = "playing";
   };
 
   const clasificar = useCallback((alimento: Alimento, escogiSaludable: boolean) => {
-    if (clasificados[alimento.nombre] !== undefined) return;
+    // Leer siempre del ref — nunca del closure obsoleto
+    if (clasificadosRef.current[alimento.nombre] !== undefined) return;
+    if (phaseRef.current !== "playing") return;
 
     const correcto = alimento.saludable === escogiSaludable;
-    const nuevoClasificados = { ...clasificados, [alimento.nombre]: correcto };
-    setClasificados(nuevoClasificados);
+    const nuevoClasificados = { ...clasificadosRef.current, [alimento.nombre]: correcto };
+    clasificadosRef.current = nuevoClasificados; // actualizar ref ANTES del setState
 
-    const nuevaRacha = correcto ? racha + 1 : 0;
-    setRacha(nuevaRacha);
+    const nuevaRacha = correcto ? rachaRef.current + 1 : 0;
+    rachaRef.current = nuevaRacha;
 
     const pts = correcto ? 10 + nuevaRacha * 2 + (alimento.dificultad - 1) * 5 : 0;
-    setPuntos(p => p + pts);
 
+    setClasificados({ ...nuevoClasificados });
+    setRacha(nuevaRacha);
+    setPuntos(p => p + pts);
     setFeedback({ nombre: alimento.nombre, correcto, dato: alimento.datoCurioso });
+
     if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
     feedbackTimeoutRef.current = setTimeout(() => {
       setFeedback(null);
-      const allDone = Object.keys(nuevoClasificados).length >= alimentos.length;
-      if (allDone) finishRound();
+      feedbackTimeoutRef.current = null;
+      const allDone = Object.keys(nuevoClasificados).length >= alimentosRef.current.length;
+      if (allDone) finishRoundRef.current();
     }, 1800);
-  }, [clasificados, racha, alimentos, finishRound]);
+  }, []);
 
   const handleNextLevel = () => {
     const correct = roundCorrect;

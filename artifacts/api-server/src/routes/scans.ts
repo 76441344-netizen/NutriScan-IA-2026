@@ -6,6 +6,20 @@ import Groq from "groq-sdk";
 const router = Router();
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
+function sanitizeJson(raw: string): string {
+  return raw.replace(/[\u0000-\u001F\u007F]/g, (ch) => {
+    if (ch === "\n") return "\\n";
+    if (ch === "\r") return "\\r";
+    if (ch === "\t") return "\\t";
+    if (ch === "\b") return "\\b";
+    if (ch === "\f") return "\\f";
+    return "";
+  });
+}
+function parseJson(raw: string): unknown {
+  try { return JSON.parse(raw); } catch { return JSON.parse(sanitizeJson(raw)); }
+}
+
 router.post("/scans/analyze", async (req, res) => {
   const { userId, imageBase64, mimeType } = req.body as { userId: number; imageBase64: string; mimeType: string };
   if (!userId || !imageBase64 || !mimeType) {
@@ -72,7 +86,7 @@ Sé específico y en español siempre. Máximo 12 ingredientes.`,
       return res.json({ ingredients: ["alimento no identificado"], confidence: "baja", notas: "No se pudo analizar con claridad" });
     }
 
-    const data = JSON.parse(jsonMatch[0]) as { ingredients: string[]; confidence?: string; plato_completo?: string; notas?: string };
+    const data = parseJson(jsonMatch[0]) as { ingredients: string[]; confidence?: string; plato_completo?: string; notas?: string };
     const ingredients = Array.isArray(data.ingredients) && data.ingredients.length > 0
       ? data.ingredients
       : ["alimento detectado"];
@@ -204,7 +218,7 @@ Para nivel_nutricional usa: "excelente", "bueno", "regular" o "mejorable".`;
     const content = completion.choices[0]?.message?.content ?? "";
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error("No JSON in response");
-    recipeData = JSON.parse(jsonMatch[0]) as RecipeData;
+    recipeData = parseJson(jsonMatch[0]) as RecipeData;
   } catch (err) {
     req.log.error({ err }, "Groq recipe generation error");
     return res.status(500).json({ error: "Error al generar la receta con IA. Intenta de nuevo." });
