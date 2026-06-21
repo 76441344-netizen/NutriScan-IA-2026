@@ -1,0 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = "artifacts/nutriscan/dist"
+
+[build.environment]
+  VITE_SUPABASE_URL = "https://psdbqmiogqbstqrounbi.supabase.co"
+  VITE_SUPABASE_ANON_KEY = "sb_publicable_tBwe2e2xDRgmZNmRI02r2w_Banogc..."

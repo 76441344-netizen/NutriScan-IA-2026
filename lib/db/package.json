@@ -23,3 +23,11 @@
     "drizzle-kit": "^0.31.10"
   }
 }
+{
+  "name": "@workspace/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}
